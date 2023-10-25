@@ -24,7 +24,7 @@ class CPDDataset(ABC):
         pass
 
     @abstractmethod
-    def get_signal(self, signal_index: int) -> ndarray:
+    def get_signal(self, signal_index: int) -> tuple[ndarray, list[int]]:
         """
         Returns the timeseries of a given signal.
         :param signal_index: index of the required signal
