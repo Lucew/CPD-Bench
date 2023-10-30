@@ -1,3 +1,6 @@
+from control.TestbenchController import TestbenchController
+
+
 class CPDBench:
 
     def __init__(self):
@@ -6,7 +9,8 @@ class CPDBench:
         self._metrics = []
 
     def start(self) -> None:
-        pass
+        bench = TestbenchController()
+        bench.execute_testrun(self._datasets, self._algorithms, self._metrics)
 
     def dataset(self, function):
         self._datasets.append(function)

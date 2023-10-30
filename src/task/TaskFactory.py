@@ -7,7 +7,9 @@ from task.Task import TaskType
 
 
 class TaskFactory:
-    def create_task(self, function: Callable, task_type: TaskType):
+
+    @staticmethod
+    def create_task(function: Callable, task_type: TaskType):
         if task_type == TaskType.DATASET_FETCH:
             return DatasetFetchTask(function)
         elif task_type == TaskType.ALGORITHM_EXECUTION:

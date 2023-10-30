@@ -30,6 +30,7 @@ def calc_accuracy(indexes, scores, ground_truth):
     return correct_preds / len(indexes)
 
 
-dataset = np.load("../data/apple.npy")
-one, two = execute_esst(dataset)
-print("done")
+#dataset = np.load("../data/apple.npy")
+#one, two = execute_esst(dataset)
+#print("done")
+cpdb.start()
