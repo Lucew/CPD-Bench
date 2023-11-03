@@ -11,13 +11,16 @@ cpdb = CPDBench()
 
 @cpdb.dataset
 def get_apple_dataset():
-    return CPD2DNdarrayDataset(np.load("../data/apple.npy"))
+    raw_data = np.load("../data/apple.npy")
+    timeseries = raw_data[:, 0]
+    reshaped_ts = np.reshape(timeseries, [1, timeseries.size])
+    return CPD2DNdarrayDataset(reshaped_ts, [337])
 
 
 @cpdb.algorithm
 def execute_esst(signal):
     detector = SST(30)
-    sig = signal[:, 0]
+    sig = signal[0]
     res = detector.transform(sig)
     indexes = [res.argmax()]
     confidences = [1.0]
@@ -30,7 +33,8 @@ def calc_accuracy(indexes, scores, ground_truth):
     return correct_preds / len(indexes)
 
 
-#dataset = np.load("../data/apple.npy")
-#one, two = execute_esst(dataset)
-#print("done")
-cpdb.start()
+if __name__ == '__main__':
+    # dataset = np.load("../data/apple.npy")
+    # one, two = execute_esst(dataset)
+    # print("done")
+    cpdb.start()

@@ -1,4 +1,5 @@
 import concurrent
+import multiprocessing
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 from control.ExecutionController import ExecutionController
@@ -9,13 +10,13 @@ from task.TaskFactory import TaskFactory
 class TestrunController(ExecutionController):
 
     def execute_run(self, methods: dict) -> None:
-        # 1. Create tasks and validate them
         tasks = self._create_tasks(methods)
+        # print(multiprocessing.cpu_count())
 
         with ProcessPoolExecutor(max_workers=None) as executor:
             for dataset in tasks["datasets"]:
                 executor.submit(self._execute_for_dataset, dataset,
-                                {k: methods[k] for k in ("algorithms", "metrics")})
+                                {k: tasks[k] for k in ("algorithms", "metrics")})
 
     def _create_tasks(self, methods):
         task_objects = {
@@ -44,18 +45,18 @@ class TestrunController(ExecutionController):
         dataset = dataset_task.execute()
         with ThreadPoolExecutor(max_workers=None) as executor:
             for i in range(0, dataset.get_length()):
-                part_dataset = dataset.get_signal(i)
+                part_dataset, ground_truth = dataset.get_signal(i)
                 for algorithm in algorithms_and_metrics["algorithms"]:
                     executor.submit(self._execute_algorithm_and_metric, part_dataset,
-                                    algorithm, algorithms_and_metrics["metrics"])
+                                    algorithm, algorithms_and_metrics["metrics"], ground_truth)
 
-    def _execute_algorithm_and_metric(self, dataset, algorithm, metrics):
-        algorithm_result = algorithm.execute(dataset)
+    def _execute_algorithm_and_metric(self, dataset, algorithm, metrics, ground_truth):
+        indexes, scores = algorithm.execute(dataset)
         with ThreadPoolExecutor(max_workers=None) as executor:
             for metric in metrics:
-                executor.submit(self._calculate_metric, algorithm_result,
-                                metric)
+                executor.submit(self._calculate_metric, indexes, scores,
+                                metric, ground_truth)
 
-    def _calculate_metric(self, algorithm_result, metric_task):
-        metric_result = metric_task.execute(algorithm_result)
+    def _calculate_metric(self, indexes, scores, metric_task, ground_truth):
+        metric_result = metric_task.execute(indexes, scores, ground_truth)
         print(metric_result)
