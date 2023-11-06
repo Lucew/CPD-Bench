@@ -15,3 +15,6 @@ class MetricExecutionTask(Task):
 
     def validate_input(self, *args) -> None:
         pass
+
+    def get_task_name(self) -> str:
+        return "m:" + self._function.__name__

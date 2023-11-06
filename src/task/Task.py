@@ -21,3 +21,7 @@ class Task(ABC):
     @abstractmethod
     def validate_input(self, *args) -> None:
         pass
+
+    @abstractmethod
+    def get_task_name(self) -> str:
+        pass

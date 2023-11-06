@@ -20,3 +20,6 @@ class DatasetFetchTask(Task):
         dataset: CPDDataset = self._function()
         dataset.init()
         return dataset
+
+    def get_task_name(self) -> str:
+        return "d:" + self._function.__name__

@@ -19,3 +19,6 @@ class AlgorithmExecutionTask(Task):
     def execute(self, data: ndarray) -> tuple[Iterable, Iterable]:
         alg_res_index, alg_res_scores = self._function(data)
         return alg_res_index, alg_res_scores
+
+    def get_task_name(self) -> str:
+        return "a:" + self._function.__name__
