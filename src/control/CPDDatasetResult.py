@@ -42,3 +42,9 @@ class CPDDatasetResult:
                 "metric_scores": self._metric_scores
             }
         }
+
+    def get_algorithms(self):
+        return self._algorithms
+
+    def get_metrics(self):
+        return self._metrics
