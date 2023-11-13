@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from control.CPDDatasetResult import CPDDatasetResult
 from control.CPDFullResult import CPDFullResult
 from control.ExecutionController import ExecutionController
+from exception.ValidationException import ValidationException
 from task.Task import TaskType
 from task.TaskFactory import TaskFactory
 
@@ -42,17 +43,14 @@ class TestrunController(ExecutionController):
         for dataset_function in methods["datasets"]:
             task_object = TaskFactory.create_task(dataset_function, TaskType.DATASET_FETCH)
             task_object.validate_task()
-            # TODO: Proper Validation incl. exception catching
             task_objects["datasets"].append(task_object)
         for algorithm_function in methods["algorithms"]:
             task_object = TaskFactory.create_task(algorithm_function, TaskType.ALGORITHM_EXECUTION)
             task_object.validate_task()
-            # TODO: Proper Validation incl. exception catching
             task_objects["algorithms"].append(task_object)
         for metric_function in methods["metrics"]:
             task_object = TaskFactory.create_task(metric_function, TaskType.METRIC_EXECUTION)
             task_object.validate_task()
-            # TODO: Proper Validation incl. exception catching
             task_objects["metrics"].append(task_object)
         return task_objects
 

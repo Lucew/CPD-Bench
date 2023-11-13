@@ -16,6 +16,9 @@ class Task(ABC):
 
     @abstractmethod
     def validate_task(self) -> None:
+        # Validiert wird:
+        # - Anzahl Params
+        # (optional wenn Typing)
         pass
 
     @abstractmethod
