@@ -10,5 +10,6 @@ class TestbenchController:
             "algorithms": algorithms,
             "metrics": metrics
         }
-        controller.execute_run(function_map)
+        result = controller.execute_run(function_map)
+        print(result.get_result_as_dict())
 
