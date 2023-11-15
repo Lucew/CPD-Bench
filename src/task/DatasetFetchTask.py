@@ -8,6 +8,8 @@ from task.Task import Task
 
 import inspect
 
+from utils.Utils import get_name_of_function
+
 
 class DatasetFetchTask(Task):
     def __init__(self, function):
@@ -18,9 +20,9 @@ class DatasetFetchTask(Task):
         full_arg_spec = inspect.getfullargspec(self._function)
         if len(full_arg_spec.args) > 0:
             # Wrong number of arguments
-            name_gen = (attr[1] for attr in inspect.getmembers(self._function) if attr[0] == "__name__")
+            function_name = get_name_of_function(self._function)
             raise InputValidationException("The number of arguments for the dataset task '{0}' is {1} but should be 0."
-                                           .format(next(name_gen, ''), len(full_arg_spec.args)))
+                                           .format(function_name, len(full_arg_spec.args)))
 
 
     def validate_input(self, *args) -> None:

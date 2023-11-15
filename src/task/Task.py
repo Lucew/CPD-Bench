@@ -18,7 +18,7 @@ class Task(ABC):
     def validate_task(self) -> None:
         # Validiert wird:
         # - Anzahl Params
-        # (optional wenn Typing)
+        # (optional wenn Typing): Typen, Rückgabetyp //TODO
         pass
 
     @abstractmethod

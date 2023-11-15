@@ -1,10 +1,12 @@
 import concurrent
 import multiprocessing
+import traceback
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 from control.CPDDatasetResult import CPDDatasetResult
 from control.CPDFullResult import CPDFullResult
 from control.ExecutionController import ExecutionController
+from exception.DatasetFetchException import CPDDatasetCreationException, FeatureLoadingException
 from exception.ValidationException import ValidationException
 from task.Task import TaskType
 from task.TaskFactory import TaskFactory
@@ -31,7 +33,14 @@ class TestrunController(ExecutionController):
                                                        tasks["algorithms"],
                                                        tasks["metrics"]))
         for ds_res in dataset_results:
-            run_result.add_dataset_result(ds_res.result())
+            try:
+                res = ds_res.result()
+                # res = ds_res.exception()
+            except Exception as e:
+                traceback.print_exc()
+                # print(e)
+            else:
+                run_result.add_dataset_result(res)
         return run_result
 
     def _create_tasks(self, methods):
@@ -63,12 +72,18 @@ class DatasetExecutor:
         self._metric_tasks = metric_tasks
 
     def execute(self):
-        dataset = self._dataset_task.execute()
+        try:
+            dataset = self._dataset_task.execute()
+        except Exception as e:
+            raise CPDDatasetCreationException(self._dataset_task.get_task_name()) from e
         self._result = CPDDatasetResult(self._dataset_task, dataset.get_length(), self._algorithm_tasks,
                                         self._metric_tasks)
         with ThreadPoolExecutor(max_workers=None) as executor:
             for i in range(0, dataset.get_length()):
-                part_dataset, ground_truth = dataset.get_signal(i)
+                try:
+                    part_dataset, ground_truth = dataset.get_signal(i)
+                except Exception as e:
+                    raise FeatureLoadingException(self._dataset_task.get_task_name(), i) from e
                 for algorithm in self._algorithm_tasks:
                     executor.submit(self._execute_algorithm_and_metric, part_dataset,
                                     algorithm, ground_truth, i)
