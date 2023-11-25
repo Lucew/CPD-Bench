@@ -1,5 +1,19 @@
+import json
+import numpy as np
+
 from control.ExecutionController import ExecutionController
 from control.TestrunController import TestrunController
+
+
+class ExtendedEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super(ExtendedEncoder, self).default(obj)
 
 
 class TestbenchController:
@@ -11,5 +25,14 @@ class TestbenchController:
             "metrics": metrics
         }
         result = controller.execute_run(function_map)
-        print(result.get_result_as_dict())
+        self.output_result(result.get_result_as_dict())
 
+    def output_result(self, result_dict: dict) -> None: #TODO: Does not overwrite file currently, but append
+        json_string = json.dumps(result_dict, indent=4, cls=ExtendedEncoder)
+
+        # file output
+        with open('cpdbench-result.json', 'w+') as file:
+            file.write(json_string)
+
+        # console output
+        print(json_string)

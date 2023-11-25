@@ -52,7 +52,7 @@ class CPDFullResult:
             "datasets": self._datasets,
             "algorithms": self._algorithms,
             "metrics": self._metrics,
-            "created": self._created,
-            "last_updated": self._last_updated,
+            "created": self._created.strftime("%m/%d/%Y, %H:%M:%S"),
+            "last_updated": self._last_updated.strftime("%m/%d/%Y, %H:%M:%S"),
             "results": self._result
         }
