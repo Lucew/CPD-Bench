@@ -4,6 +4,7 @@ from utils.Utils import get_name_of_function
 standard_msg_create_dataset = "Error while creating the CPDDataset object with the {0} function"
 
 standard_msg_load_feature = "Error while loading feature {0} of the CPDDataset from function {1}"
+# TODO: Globals in Klassen stecken
 
 
 class DatasetFetchException(CPDExecutionException):

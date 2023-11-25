@@ -24,6 +24,7 @@ def get_bitcoin_dataset():
     timeseries = raw_data[:, 0]
     reshaped_ts = np.reshape(timeseries, [1, timeseries.size])
     return CPD2DNdarrayDataset(reshaped_ts, [569])
+# TODO: d: => ausschreiben zu dataset:
 
 
 @cpdb.algorithm
