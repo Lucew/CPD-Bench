@@ -37,6 +37,7 @@ def init_logger():
     console_handler.setLevel(logging.ERROR)
     _app_logger.addHandler(console_handler)
 
+    #open('cpdbench-log.txt', 'w').close()
     file_handler = logging.FileHandler('cpdbench-log.txt')
     file_handler.setFormatter(general_formatter)
     file_handler.setLevel(logging.INFO)

@@ -10,7 +10,11 @@ from exception.DatasetFetchException import CPDDatasetCreationException, Feature
 from exception.ValidationException import ValidationException
 from task.Task import TaskType
 from task.TaskFactory import TaskFactory
+from utils import Logger
+from utils import Utils
 
+
+# TODO: Multiprocessing Logging nach https://docs.python.org/3/howto/logging-cookbook.html#logging-to-a-single-file-from-multiple-processes
 
 def create_ds_executor_and_run(dataset, algorithms, metrics):
     ds_executor = DatasetExecutor(dataset, algorithms, metrics)
@@ -19,8 +23,15 @@ def create_ds_executor_and_run(dataset, algorithms, metrics):
 
 class TestrunController(ExecutionController):
 
+    def __init__(self):
+        self._logger = Logger.get_application_logger()
+
     def execute_run(self, methods: dict) -> any:
+        self._logger.info('Creating tasks...')
         tasks = self._create_tasks(methods)
+        self._logger.info(f"{len(tasks['datasets']) + len(tasks['algorithms']) + len(tasks['metrics'])} tasks created")
+        # TODO: Prüfen, ob es noch genug Tasks gibt (evtl. gar nicht nötig)
+        # TODO: Macht es Sinn, Errors in die result.json reinzuschreiben?
         # print(multiprocessing.cpu_count())
 
         dataset_results = []
@@ -50,17 +61,40 @@ class TestrunController(ExecutionController):
             "metrics": []
         }
         for dataset_function in methods["datasets"]:
+            self._logger.debug(f"Creating and validating dataset task "
+                               f"for {Utils.get_name_of_function(dataset_function)}")
             task_object = TaskFactory.create_task(dataset_function, TaskType.DATASET_FETCH)
-            task_object.validate_task()
-            task_objects["datasets"].append(task_object)
+            try:
+                task_object.validate_task()
+            except ValidationException as e:
+                self._logger.exception(e)
+            else:
+                self._logger.debug(f'Validating {Utils.get_name_of_function(dataset_function)} has succeeded')
+                task_objects["datasets"].append(task_object)
+
         for algorithm_function in methods["algorithms"]:
+            self._logger.debug(f"Creating and validating algorithm task "
+                               f"for {Utils.get_name_of_function(algorithm_function)}")
             task_object = TaskFactory.create_task(algorithm_function, TaskType.ALGORITHM_EXECUTION)
-            task_object.validate_task()
-            task_objects["algorithms"].append(task_object)
+            try:
+                task_object.validate_task()
+            except ValidationException as e:
+                self._logger.exception(e)
+            else:
+                self._logger.debug(f'Validating {Utils.get_name_of_function(algorithm_function)} has succeeded')
+                task_objects["algorithms"].append(task_object)
+
         for metric_function in methods["metrics"]:
+            self._logger.debug(f"Creating and validating metric task "
+                               f"for {Utils.get_name_of_function(metric_function)}")
             task_object = TaskFactory.create_task(metric_function, TaskType.METRIC_EXECUTION)
-            task_object.validate_task()
-            task_objects["metrics"].append(task_object)
+            try:
+                task_object.validate_task()
+            except ValidationException as e:
+                self._logger.exception(e)
+            else:
+                self._logger.debug(f'Validating {Utils.get_name_of_function(metric_function)} has succeeded')
+                task_objects["metrics"].append(task_object)
         return task_objects
 
 
@@ -70,6 +104,8 @@ class DatasetExecutor:
         self._dataset_task = dataset_task
         self._algorithm_tasks = algorithm_tasks
         self._metric_tasks = metric_tasks
+
+    # self._logger = logger
 
     def execute(self):
         try:

@@ -1,4 +1,6 @@
 import json
+import logging
+
 import numpy as np
 
 from control.ExecutionController import ExecutionController
@@ -26,12 +28,13 @@ class TestbenchController:
         }
         result = controller.execute_run(function_map)
         self.output_result(result.get_result_as_dict())
+        logging.shutdown()
 
-    def output_result(self, result_dict: dict) -> None: #TODO: Does not overwrite file currently, but append
+    def output_result(self, result_dict: dict) -> None:
         json_string = json.dumps(result_dict, indent=4, cls=ExtendedEncoder)
 
         # file output
-        with open('cpdbench-result.json', 'w+') as file:
+        with open('cpdbench-result.json', 'w') as file:
             file.write(json_string)
 
         # console output

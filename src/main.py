@@ -8,13 +8,16 @@ from changepoynt.visualization.score_plotting import plot_data_and_score
 
 cpdb = CPDBench()
 
+# TODO: Was passiert, wenn es gar keine annotierten Methoden gibt?
+
+# TODO: Durchgehen was passiert, wenn alle Methoden invalid sind
 
 @cpdb.dataset
 def get_apple_dataset():
     raw_data = np.load("../data/apple.npy")
     timeseries = raw_data[:, 0]
     reshaped_ts = np.reshape(timeseries, [1, timeseries.size])
-    raise Exception
+    #raise Exception
     return CPD2DNdarrayDataset(reshaped_ts, [337])
 
 
@@ -24,7 +27,6 @@ def get_bitcoin_dataset():
     timeseries = raw_data[:, 0]
     reshaped_ts = np.reshape(timeseries, [1, timeseries.size])
     return CPD2DNdarrayDataset(reshaped_ts, [569])
-# TODO: d: => ausschreiben zu dataset:
 
 
 @cpdb.algorithm

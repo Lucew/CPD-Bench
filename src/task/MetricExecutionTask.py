@@ -27,4 +27,4 @@ class MetricExecutionTask(Task):
         pass
 
     def get_task_name(self) -> str:
-        return "m:" + self._function.__name__
+        return "metric:" + self._function.__name__
