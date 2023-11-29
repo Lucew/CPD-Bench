@@ -1,7 +1,11 @@
 import concurrent
+import logging
+import logging.handlers
 import multiprocessing
+import threading
 import traceback
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from multiprocessing import Queue
 
 from control.CPDDatasetResult import CPDDatasetResult
 from control.CPDFullResult import CPDFullResult
@@ -14,10 +18,17 @@ from utils import Logger
 from utils import Utils
 
 
-# TODO: Multiprocessing Logging nach https://docs.python.org/3/howto/logging-cookbook.html#logging-to-a-single-file-from-multiple-processes
+# Quelle Multiprocessing Logging: https://docs.python.org/3/howto/logging-cookbook.html#logging-to-a-single-file-from-multiple-processes
+def logger_thread(queue, logger):
+    while True:
+        record = queue.get()
+        if record is None:
+            break
+        logger.handle(record)
 
-def create_ds_executor_and_run(dataset, algorithms, metrics):
-    ds_executor = DatasetExecutor(dataset, algorithms, metrics)
+
+def create_ds_executor_and_run(dataset, algorithms, metrics, queue):
+    ds_executor = DatasetExecutor(dataset, algorithms, metrics, queue)
     return ds_executor.execute()
 
 
@@ -38,13 +49,15 @@ class TestrunController(ExecutionController):
         run_result = CPDFullResult(list(map(lambda x: x.get_task_name(), tasks['datasets'])),
                                    list(map(lambda x: x.get_task_name(), tasks['algorithms'])),
                                    list(map(lambda x: x.get_task_name(), tasks['metrics'])))
-
+        q = multiprocessing.Manager().Queue()
+        logging_thread = threading.Thread(target=logger_thread, args=(q, self._logger))
+        logging_thread.start()
         with ProcessPoolExecutor(max_workers=None) as executor:
             for dataset in tasks["datasets"]:
                 dataset_results.append(executor.submit(create_ds_executor_and_run,
                                                        dataset,
                                                        tasks["algorithms"],
-                                                       tasks["metrics"]))
+                                                       tasks["metrics"], q))
         for ds_res in dataset_results:
             try:
                 res = ds_res.result()
@@ -54,6 +67,9 @@ class TestrunController(ExecutionController):
                 # print(e)
             else:
                 run_result.add_dataset_result(res)
+        q.put_nowait(None)
+        logging_thread.join()
+
         return run_result
 
     def _create_tasks(self, methods):
@@ -101,16 +117,20 @@ class TestrunController(ExecutionController):
 
 
 class DatasetExecutor:
-    def __init__(self, dataset_task, algorithm_tasks, metric_tasks):
+    def __init__(self, dataset_task, algorithm_tasks, metric_tasks, logging_queue):
         self._result: CPDDatasetResult = None  # Created later
         self._dataset_task = dataset_task
         self._algorithm_tasks = algorithm_tasks
         self._metric_tasks = metric_tasks
 
-    # self._logger = logger
+        logger_name = 'cpdbench.' + dataset_task.get_task_name()
+        self.logger = logging.getLogger(logger_name)
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.addHandler(logging.handlers.QueueHandler(logging_queue))
 
     def execute(self):
         try:
+            self.logger.info(f"Executing dataset task {self._dataset_task.get_task_name()}")
             dataset = self._dataset_task.execute()
         except Exception as e:
             raise CPDDatasetCreationException(self._dataset_task.get_task_name()) from e

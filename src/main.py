@@ -8,12 +8,13 @@ from changepoynt.visualization.score_plotting import plot_data_and_score
 
 cpdb = CPDBench()
 
+
 @cpdb.dataset
 def get_apple_dataset():
     raw_data = np.load("../data/apple.npy")
     timeseries = raw_data[:, 0]
     reshaped_ts = np.reshape(timeseries, [1, timeseries.size])
-    #raise Exception
+    # raise Exception
     return CPD2DNdarrayDataset(reshaped_ts, [337])
 
 
