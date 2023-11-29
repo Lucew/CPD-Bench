@@ -35,7 +35,9 @@ class TestrunController(ExecutionController):
         # print(multiprocessing.cpu_count())
 
         dataset_results = []
-        run_result = CPDFullResult()
+        run_result = CPDFullResult(list(map(lambda x: x.get_task_name(), tasks['datasets'])),
+                                   list(map(lambda x: x.get_task_name(), tasks['algorithms'])),
+                                   list(map(lambda x: x.get_task_name(), tasks['metrics'])))
 
         with ProcessPoolExecutor(max_workers=None) as executor:
             for dataset in tasks["datasets"]:

@@ -8,10 +8,6 @@ from changepoynt.visualization.score_plotting import plot_data_and_score
 
 cpdb = CPDBench()
 
-# TODO: Was passiert, wenn es gar keine annotierten Methoden gibt?
-
-# TODO: Durchgehen was passiert, wenn alle Methoden invalid sind
-
 @cpdb.dataset
 def get_apple_dataset():
     raw_data = np.load("../data/apple.npy")

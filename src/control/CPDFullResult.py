@@ -30,22 +30,17 @@ import datetime
 
 class CPDFullResult:
 
-    def __init__(self):
+    def __init__(self, datasets, algorithms, metrics):
         self._result = {}
         self._created = datetime.datetime.now()
         self._last_updated = self._created
-        self._datasets = []
-        self._algorithms = None
-        self._metrics = None
+        self._datasets = datasets
+        self._algorithms = algorithms
+        self._metrics = metrics
 
     def add_dataset_result(self, dataset_result: CPDDatasetResult):
-        for dataset_name, infos in dataset_result.get_result_as_dict().items():
-            self._datasets.append(dataset_name)
-            if self._algorithms is None:
-                self._algorithms = dataset_result.get_algorithms()
-                self._metrics = dataset_result.get_metrics()
-            self._result = self._result | dataset_result.get_result_as_dict()
-            self._last_updated = datetime.datetime.now()
+        self._result = self._result | dataset_result.get_result_as_dict()
+        self._last_updated = datetime.datetime.now()
 
     def get_result_as_dict(self):
         return {
