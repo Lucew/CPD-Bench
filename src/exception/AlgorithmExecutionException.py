@@ -1,0 +1,10 @@
+from exception.CPDExecutionException import CPDExecutionException
+
+
+class AlgorithmExecutionException(CPDExecutionException):
+    """Exception type when the execution of an algorithm on a dataset has failed"""
+
+    standard_msg = 'Error while executing the algorithm {0} on dataset {1} on feature {2}'
+
+    def __init__(self, algorithm_function, dataset_function, feature):
+        super().__init__(self.standard_msg.format(algorithm_function, dataset_function, feature))
