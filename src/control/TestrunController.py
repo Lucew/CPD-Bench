@@ -1,18 +1,12 @@
-import concurrent
 import logging
 import logging.handlers
 import multiprocessing
 import threading
-import traceback
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
-from multiprocessing import Queue
+from concurrent.futures import ProcessPoolExecutor
 
-from control.CPDDatasetResult import CPDDatasetResult
 from control.CPDFullResult import CPDFullResult
+from control.DatasetExecutor import DatasetExecutor
 from control.ExecutionController import ExecutionController
-from exception.AlgorithmExecutionException import AlgorithmExecutionException
-from exception.DatasetFetchException import CPDDatasetCreationException, FeatureLoadingException
-from exception.MetricExecutionException import MetricExecutionException
 from exception.ValidationException import ValidationException
 from task.Task import TaskType
 from task.TaskFactory import TaskFactory
@@ -126,68 +120,4 @@ class TestrunController(ExecutionController):
         return task_objects
 
 
-# TODO: Laufzeiten für alle Tasks
-class DatasetExecutor:
-    def __init__(self, dataset_task, algorithm_tasks, metric_tasks, logger):
-        self._result: CPDDatasetResult = None  # Created later
-        self._dataset_task = dataset_task
-        self._algorithm_tasks = algorithm_tasks
-        self._metric_tasks = metric_tasks
-        self.logger = logger
 
-    def execute(self):
-        try:
-            self.logger.info(f"Start running tasks for dataset {self._dataset_task.get_task_name()}")
-            self.logger.debug(f"Executing dataset task {self._dataset_task.get_task_name()}")
-            dataset = self._dataset_task.execute()
-            self.logger.debug(f"Finished dataset task {self._dataset_task.get_task_name()}")
-        except Exception as e:
-            raise CPDDatasetCreationException(self._dataset_task.get_task_name()) from e
-        self._result = CPDDatasetResult(self._dataset_task, dataset.get_length(), self._algorithm_tasks,
-                                        self._metric_tasks)
-        algorithms = []
-        with ThreadPoolExecutor(max_workers=None) as executor:
-            self.logger.debug(f"Starting threads for algorithms and metrics")
-            self.logger.debug(f"Got {dataset.get_length()} features in this dataset")
-            for i in range(0, dataset.get_length()):  # TODO: Was passiert bei Exception hier? kompletter Abbruch?
-                try:
-                    part_dataset, ground_truth = dataset.get_signal(i)
-                except Exception as e:
-                    raise FeatureLoadingException(self._dataset_task.get_task_name(), i) from e
-                else:
-                    for algorithm in self._algorithm_tasks:
-                        algorithms.append(executor.submit(self._execute_algorithm_and_metric, part_dataset,
-                                                          algorithm, ground_truth, i))
-                        self.logger.debug(f"Started thread for algorithm {algorithm.get_task_name()}")
-        for a in algorithms:
-            try:
-                a.result()
-            except Exception as e:
-                self.logger.exception(e) #TODO: Wie soll result.json bei Fehlern aussehen?
-        return self._result
-
-    def _execute_algorithm_and_metric(self, dataset, algorithm, ground_truth, feature):
-        try:
-            indexes, scores = algorithm.execute(dataset)
-        except Exception as e:
-            raise AlgorithmExecutionException(algorithm.get_task_name(),
-                                              self._dataset_task.get_task_name(), feature) from e
-        self._result.add_algorithm_result(indexes, scores, feature, algorithm.get_task_name())
-        metrics = []
-        with ThreadPoolExecutor(max_workers=None) as executor:
-            for metric in self._metric_tasks:
-                metrics.append(executor.submit(self._calculate_metric, indexes, scores,
-                                               metric, ground_truth, feature, algorithm))
-        for a in metrics:
-            try:
-                a.result()
-            except Exception as e:
-                self.logger.exception(e)
-
-    def _calculate_metric(self, indexes, scores, metric_task, ground_truth, feature, algorithm):
-        try:
-            metric_result = metric_task.execute(indexes, scores, ground_truth)
-        except Exception as e:
-            raise MetricExecutionException(metric_task.get_task_name(), algorithm.get_task_name(),
-                                           self._dataset_task.get_task_name(), feature) from e
-        self._result.add_metric_score(metric_result, feature, algorithm.get_task_name(), metric_task.get_task_name())

@@ -4,6 +4,10 @@ from utils.Utils import get_name_of_function
 standard_msg_create_dataset = "Error while creating the CPDDataset object with the {0} function"
 
 standard_msg_load_feature = "Error while loading feature {0} of the CPDDataset from function {1}"
+
+standard_msg_load_signal = "Error while loading the signal of the CPDDataset from function {0}"
+
+
 # TODO: Globals in Klassen stecken
 
 
@@ -19,7 +23,7 @@ class CPDDatasetCreationException(DatasetFetchException):
 
     # TODO: Objekt mitgeben?
     def __init__(self, dataset_function):
-        #function_name = get_name_of_function(dataset_function)
+        # function_name = get_name_of_function(dataset_function)
         super().__init__(standard_msg_create_dataset.format(dataset_function))
 
 
@@ -28,5 +32,12 @@ class FeatureLoadingException(DatasetFetchException):
 
     # TODO: Objekt mitgeben?
     def __init__(self, dataset_function, feature):
-        #function_name = get_name_of_function(dataset_function)
+        # function_name = get_name_of_function(dataset_function)
         super().__init__(standard_msg_load_feature.format(feature, dataset_function))
+
+
+class SignalLoadingException(DatasetFetchException):
+    """Exception type when the loading of a signal of a CPDDataset has failed"""
+
+    def __init__(self, dataset_function):
+        super().__init__(standard_msg_load_feature.format(dataset_function))

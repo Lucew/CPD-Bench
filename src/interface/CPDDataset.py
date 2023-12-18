@@ -16,18 +16,9 @@ class CPDDataset(ABC):
         pass
 
     @abstractmethod
-    def get_length(self) -> int:
+    def get_signal(self) -> tuple[ndarray, list[int]]:
         """
-        Returns the number of signals from a dataset.
-        :return: number of signals
-        """
-        pass
-
-    @abstractmethod
-    def get_signal(self, signal_index: int) -> tuple[ndarray, list[int]]:
-        """
-        Returns the timeseries of a given signal.
-        :param signal_index: index of the required signal
+        Returns the timeseries as numpy array.
         :return: A 2D ndarray containing the timeseries (time x feature)
         """
         pass

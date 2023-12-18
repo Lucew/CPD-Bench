@@ -40,7 +40,7 @@ def init_logger():
    # open('cpdbench-log.txt', 'w').close()
     file_handler = logging.FileHandler('cpdbench-log.txt', 'w')
     file_handler.setFormatter(general_formatter)
-    file_handler.setLevel(logging.INFO)
+    file_handler.setLevel(logging.DEBUG)
     _app_logger.addHandler(file_handler)
     return _app_logger
 
