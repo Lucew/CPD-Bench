@@ -40,4 +40,4 @@ class SignalLoadingException(DatasetFetchException):
     """Exception type when the loading of a signal of a CPDDataset has failed"""
 
     def __init__(self, dataset_function):
-        super().__init__(standard_msg_load_feature.format(dataset_function))
+        super().__init__(standard_msg_load_signal.format(dataset_function))

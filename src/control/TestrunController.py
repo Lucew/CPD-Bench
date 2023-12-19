@@ -73,7 +73,8 @@ class TestrunController(ExecutionController):
                 run_result.add_dataset_result(res)
         q.put_nowait(None)
         logging_thread.join()
-
+        self._logger.info("Collected all datasets")
+        self._logger.info("Finished testrun. Printing results")
         return run_result
 
     def _create_tasks(self, methods):

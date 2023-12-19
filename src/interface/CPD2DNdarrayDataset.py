@@ -12,8 +12,5 @@ class CPD2DNdarrayDataset(CPDDataset):
     def init(self) -> None:
         pass
 
-    def get_signal(self, signal_index: int) -> tuple[ndarray, list[int]]:
+    def get_signal(self) -> tuple[ndarray, list[int]]:
         return self._ndarray, self._ground_truths
-
-    def get_length(self) -> int:
-        return 1
