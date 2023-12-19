@@ -1,5 +1,5 @@
 numpy
-
+pyyaml
 
 # Temporary requirements for tests
 changepoynt

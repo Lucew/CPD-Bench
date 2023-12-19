@@ -23,6 +23,7 @@
 # TODO: Logging frei konfigurierbar machen
 
 import logging
+from utils import BenchConfig
 
 _app_logger = None
 
@@ -38,9 +39,9 @@ def init_logger():
     _app_logger.addHandler(console_handler)
 
    # open('cpdbench-log.txt', 'w').close()
-    file_handler = logging.FileHandler('cpdbench-log.txt', 'w')
+    file_handler = logging.FileHandler(BenchConfig.logging_file_name, 'w')
     file_handler.setFormatter(general_formatter)
-    file_handler.setLevel(logging.DEBUG)
+    file_handler.setLevel(BenchConfig.logging_level)
     _app_logger.addHandler(file_handler)
     return _app_logger
 

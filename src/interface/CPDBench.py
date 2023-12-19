@@ -1,6 +1,7 @@
 from control.TestbenchController import TestbenchController
 from utils import Logger
 from utils import Utils
+from utils import BenchConfig
 
 
 class CPDBench:
@@ -12,6 +13,7 @@ class CPDBench:
         self._logger = None
 
     def start(self) -> None:
+        BenchConfig.load_config()
         self._logger = Logger.get_application_logger()
         self._logger.debug('CPDBench object created')
         self._logger.info("Starting CPDBench")

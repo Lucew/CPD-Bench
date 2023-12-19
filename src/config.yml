@@ -1,0 +1,4 @@
+logging:
+  filename: cpdbench-log33.txt
+  log-level: INFO
+# multiprocessing: true/false
