@@ -33,12 +33,14 @@ def execute_esst(signal):
     res = detector.transform(sig)
     indexes = [res.argmax()]
     confidences = [1.0]
+    # raise Exception
     return indexes, confidences
 
 
 @cpdb.metric
 def calc_accuracy(indexes, scores, ground_truth):
     correct_preds = len(set(indexes) & set(ground_truth))
+    # raise Exception
     return correct_preds / len(indexes)
 
 

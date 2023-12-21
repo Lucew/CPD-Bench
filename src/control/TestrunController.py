@@ -47,7 +47,6 @@ class TestrunController(ExecutionController):
         tasks = self._create_tasks(methods)
         self._logger.info(f"{len(tasks['datasets']) + len(tasks['algorithms']) + len(tasks['metrics'])} tasks created")
         # TODO: Prüfen, ob es noch genug Tasks gibt (evtl. gar nicht nötig)
-        # TODO: Macht es Sinn, Errors in die result.json reinzuschreiben?
         # print(multiprocessing.cpu_count())
 
         dataset_results = []
@@ -68,7 +67,7 @@ class TestrunController(ExecutionController):
             try:
                 res = ds_res.result()
             except Exception:
-                pass
+                pass # TODO: better handling
             else:
                 run_result.add_dataset_result(res)
         q.put_nowait(None)

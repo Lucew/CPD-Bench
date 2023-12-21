@@ -1,7 +1,7 @@
 # TODO: Laufzeiten für alle Tasks
 from concurrent.futures import ThreadPoolExecutor
 
-from control.CPDDatasetResult import CPDDatasetResult
+from control.CPDDatasetResult import CPDDatasetResult, ErrorType
 from exception.AlgorithmExecutionException import AlgorithmExecutionException
 from exception.DatasetFetchException import CPDDatasetCreationException, SignalLoadingException
 from exception.MetricExecutionException import MetricExecutionException
@@ -16,6 +16,15 @@ class DatasetExecutor:
         self.logger = logger
 
     def execute(self):
+        self._result = CPDDatasetResult(self._dataset_task, self._algorithm_tasks, self._metric_tasks)
+        try:
+            self._execute_dataset()
+        except Exception as e:
+            self.logger.exception(e)
+            self._result.add_error(e, ErrorType.DATASET_ERROR)
+        return self._result
+
+    def _execute_dataset(self):
         try:
             self.logger.info(f"Start running tasks for dataset {self._dataset_task.get_task_name()}")
             self.logger.debug(f"Executing dataset task {self._dataset_task.get_task_name()}")
@@ -23,7 +32,6 @@ class DatasetExecutor:
             self.logger.debug(f"Finished dataset task {self._dataset_task.get_task_name()}")
         except Exception as e:
             raise CPDDatasetCreationException(self._dataset_task.get_task_name()) from e
-        self._result = CPDDatasetResult(self._dataset_task, self._algorithm_tasks, self._metric_tasks)
         algorithms = []
         with ThreadPoolExecutor(max_workers=None) as executor:
             self.logger.debug(f"Getting signal")
@@ -38,14 +46,14 @@ class DatasetExecutor:
                     algorithms.append(executor.submit(self._execute_algorithm_and_metric, data,
                                                       algorithm, ground_truth))
                     self.logger.debug(f"Started thread for algorithm {algorithm.get_task_name()}")
-        for a in algorithms:
+        for i in range(0, len(algorithms)):
             try:
-                a.result()
+                algorithms[i].result()
             except Exception as e:
-                self.logger.exception(e) #TODO: Wie soll result.json bei Fehlern aussehen?
+                self.logger.exception(e)
+                self._result.add_error(e, ErrorType.ALGORITHM_ERROR, self._algorithm_tasks[i].get_task_name())
         self.logger.debug(f"All algorithm threads are finished")
         self.logger.debug(f"Finished!")
-        return self._result
 
     def _execute_algorithm_and_metric(self, dataset, algorithm, ground_truth):
         logger = self.logger.getChild(algorithm.get_task_name())
@@ -64,11 +72,13 @@ class DatasetExecutor:
                 metrics.append(executor.submit(self._calculate_metric, indexes, scores,
                                                metric, ground_truth, algorithm))
                 logger.debug(f"Started thread for metric {metric.get_task_name()}")
-        for a in metrics:
+        for i in range(0, len(metrics)):
             try:
-                a.result()
+                metrics[i].result()
             except Exception as e:
                 logger.exception(e)
+                self._result.add_error(e, ErrorType.METRIC_ERROR, algorithm.get_task_name(),
+                                       self._metric_tasks[i].get_task_name())
         logger.debug(f"All metric threads are finished")
         logger.debug(f"Finished")
 
