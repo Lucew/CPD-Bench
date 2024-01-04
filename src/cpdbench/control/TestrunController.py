@@ -4,14 +4,13 @@ import multiprocessing
 import threading
 from concurrent.futures import ProcessPoolExecutor
 
-from control.CPDFullResult import CPDFullResult
-from control.DatasetExecutor import DatasetExecutor
-from control.ExecutionController import ExecutionController
-from exception.ValidationException import ValidationException
-from task.Task import TaskType
-from task.TaskFactory import TaskFactory
-from utils import Logger
-from utils import Utils
+from cpdbench.control.CPDFullResult import CPDFullResult
+from cpdbench.control.DatasetExecutor import DatasetExecutor
+from cpdbench.control.ExecutionController import ExecutionController
+from cpdbench.exception.ValidationException import ValidationException
+from cpdbench.task.Task import TaskType
+from cpdbench.task.TaskFactory import TaskFactory
+from cpdbench.utils import Utils, Logger
 from tqdm import tqdm
 
 

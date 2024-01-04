@@ -2,13 +2,12 @@ from collections.abc import Iterable
 
 from numpy import ndarray
 
-from exception.InputValidationException import InputValidationException
-from interface.CPDDataset import CPDDataset
-from task.Task import Task
+from cpdbench.exception import InputValidationException
+from cpdbench.task.Task import Task
 
 import inspect
 
-from utils.Utils import get_name_of_function
+from cpdbench.utils.Utils import get_name_of_function
 
 
 class AlgorithmExecutionTask(Task):

@@ -23,7 +23,7 @@
 # TODO: Logging frei konfigurierbar machen
 
 import logging
-from utils import BenchConfig
+from cpdbench.utils import BenchConfig
 
 _app_logger = None
 

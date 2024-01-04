@@ -1,9 +1,9 @@
 import inspect
 from collections.abc import Iterable
 
-from exception.InputValidationException import InputValidationException
-from task.Task import Task
-from utils.Utils import get_name_of_function
+from cpdbench.exception import InputValidationException
+from cpdbench.task.Task import Task
+from cpdbench.utils.Utils import get_name_of_function
 
 
 class MetricExecutionTask(Task):

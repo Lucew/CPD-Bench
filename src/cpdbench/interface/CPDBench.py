@@ -1,6 +1,5 @@
-from control.TestbenchController import TestbenchController
-from utils import Logger
-from utils import BenchConfig
+from cpdbench.control.TestbenchController import TestbenchController
+from cpdbench.utils import Logger, BenchConfig
 
 
 class CPDBench:

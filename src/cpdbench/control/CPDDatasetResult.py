@@ -1,9 +1,9 @@
 from enum import Enum
 
-from exception.ResultSetInconsistentException import ResultSetInconsistentException
+from cpdbench.exception.ResultSetInconsistentException import ResultSetInconsistentException
 import traceback
 
-from task.Task import Task
+from cpdbench.task.Task import Task
 
 
 class ErrorType(str, Enum):

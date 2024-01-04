@@ -1,6 +1,6 @@
 from numpy import ndarray
 
-from interface.CPDDataset import CPDDataset
+from cpdbench.interface.CPDDataset import CPDDataset
 
 
 class CPD2DNdarrayDataset(CPDDataset):

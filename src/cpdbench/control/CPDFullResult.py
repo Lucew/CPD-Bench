@@ -35,7 +35,7 @@
 #   ]
 #
 # }
-from control.CPDDatasetResult import CPDDatasetResult
+from cpdbench.control.CPDDatasetResult import CPDDatasetResult
 import datetime
 
 

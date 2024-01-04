@@ -1,9 +1,9 @@
 from typing import Callable
 
-from task.AlgorithmExecutionTask import AlgorithmExecutionTask
-from task.DatasetFetchTask import DatasetFetchTask
-from task.MetricExecutionTask import MetricExecutionTask
-from task.Task import TaskType
+from cpdbench.task.AlgorithmExecutionTask import AlgorithmExecutionTask
+from cpdbench.task.DatasetFetchTask import DatasetFetchTask
+from cpdbench.task.MetricExecutionTask import MetricExecutionTask
+from cpdbench.task.Task import TaskType
 
 
 class TaskFactory:

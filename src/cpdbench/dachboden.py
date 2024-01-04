@@ -24,4 +24,4 @@ def load_dataset(filename, outputname):
 
     return data, mat
 
-load_dataset("../data/bitcoin.json", "../data/bitcoin.npy")
+load_dataset("../../data/bitcoin.json", "../data/bitcoin.npy")

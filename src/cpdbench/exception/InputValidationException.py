@@ -1,4 +1,4 @@
-from exception.ValidationException import ValidationException
+from cpdbench.exception.ValidationException import ValidationException
 
 
 class InputValidationException(ValidationException):

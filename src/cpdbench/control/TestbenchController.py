@@ -3,8 +3,7 @@ import logging
 
 import numpy as np
 
-from control.ExecutionController import ExecutionController
-from control.TestrunController import TestrunController
+from cpdbench.control.TestrunController import TestrunController
 
 
 class ExtendedEncoder(json.JSONEncoder):

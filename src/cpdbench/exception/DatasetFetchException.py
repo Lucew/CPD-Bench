@@ -1,4 +1,4 @@
-from exception.CPDExecutionException import CPDExecutionException
+from cpdbench.exception.CPDExecutionException import CPDExecutionException
 
 
 class DatasetFetchException(CPDExecutionException):

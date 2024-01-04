@@ -1,11 +1,10 @@
 # TODO: Laufzeiten für alle Tasks
 from concurrent.futures import ThreadPoolExecutor
 
-from control.CPDDatasetResult import CPDDatasetResult, ErrorType
-from exception.AlgorithmExecutionException import AlgorithmExecutionException
-from exception.DatasetFetchException import CPDDatasetCreationException, SignalLoadingException
-from exception.MetricExecutionException import MetricExecutionException
-from tqdm import tqdm
+from cpdbench.control.CPDDatasetResult import CPDDatasetResult, ErrorType
+from cpdbench.exception.AlgorithmExecutionException import AlgorithmExecutionException
+from cpdbench.exception.DatasetFetchException import CPDDatasetCreationException, SignalLoadingException
+from cpdbench.exception.MetricExecutionException import MetricExecutionException
 
 
 class DatasetExecutor:

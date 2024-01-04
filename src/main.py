@@ -1,10 +1,7 @@
-import matplotlib.pyplot as plt
-
-from interface.CPD2DNdarrayDataset import CPD2DNdarrayDataset
-from interface.CPDBench import CPDBench
+from cpdbench.interface.CPD2DNdarrayDataset import CPD2DNdarrayDataset
+from cpdbench.interface.CPDBench import CPDBench
 import numpy as np
 from changepoynt.algorithms.sst import SST
-from changepoynt.visualization.score_plotting import plot_data_and_score
 
 cpdb = CPDBench()
 
