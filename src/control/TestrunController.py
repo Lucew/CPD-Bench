@@ -12,6 +12,7 @@ from task.Task import TaskType
 from task.TaskFactory import TaskFactory
 from utils import Logger
 from utils import Utils
+from tqdm import tqdm
 
 
 # Quelle Multiprocessing Logging: https://docs.python.org/3/howto/logging-cookbook.html#logging-to-a-single-file-from-multiple-processes
@@ -54,6 +55,7 @@ class TestrunController(ExecutionController):
                                    list(map(lambda x: x.get_task_name(), tasks['algorithms'])),
                                    list(map(lambda x: x.get_task_name(), tasks['metrics'])))
         q = multiprocessing.Manager().Queue()
+        error_list = []
         logging_thread = threading.Thread(target=logger_thread, args=(q, self._logger))
         logging_thread.start()
 
@@ -63,15 +65,17 @@ class TestrunController(ExecutionController):
                                                        dataset,
                                                        tasks["algorithms"],
                                                        tasks["metrics"], q))
-        for ds_res in dataset_results:
-            try:
-                res = ds_res.result()
-            except Exception:
-                pass # TODO: better handling
-            else:
-                run_result.add_dataset_result(res)
+            for ds_res in tqdm(dataset_results, desc='Processing datasets'):
+                try:
+                    res = ds_res.result()
+                except Exception as e:
+                    error_list.append(e)
+                else:
+                    run_result.add_dataset_result(res)
         q.put_nowait(None)
         logging_thread.join()
+        for error in error_list:
+            self._logger.exception(error)
         self._logger.info("Collected all datasets")
         self._logger.info("Finished testrun. Printing results")
         return run_result

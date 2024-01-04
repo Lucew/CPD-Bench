@@ -5,6 +5,7 @@ from control.CPDDatasetResult import CPDDatasetResult, ErrorType
 from exception.AlgorithmExecutionException import AlgorithmExecutionException
 from exception.DatasetFetchException import CPDDatasetCreationException, SignalLoadingException
 from exception.MetricExecutionException import MetricExecutionException
+from tqdm import tqdm
 
 
 class DatasetExecutor:
@@ -46,6 +47,7 @@ class DatasetExecutor:
                     algorithms.append(executor.submit(self._execute_algorithm_and_metric, data,
                                                       algorithm, ground_truth))
                     self.logger.debug(f"Started thread for algorithm {algorithm.get_task_name()}")
+        #for i in tqdm(range(0, len(algorithms)), desc=f'Processing algorithms for {self._dataset_task.get_task_name()}'): #TODO: Frage: Hier auch tqdm?
         for i in range(0, len(algorithms)):
             try:
                 algorithms[i].result()

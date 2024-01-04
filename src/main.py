@@ -23,6 +23,7 @@ def get_bitcoin_dataset():
     raw_data = np.load("../data/bitcoin.npy")
     timeseries = raw_data[:, 0]
     reshaped_ts = np.reshape(timeseries, [1, timeseries.size])
+    # raise Exception
     return CPD2DNdarrayDataset(reshaped_ts, [569])
 
 
