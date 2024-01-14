@@ -40,8 +40,14 @@ import datetime
 
 
 class CPDFullResult:
+    """Container for a complete run result with all datasets"""
 
-    def __init__(self, datasets, algorithms, metrics):
+    def __init__(self, datasets: list[str], algorithms: list[str], metrics: list[str]):
+        """Construct a CPDFullResult object with basic metadata
+        :param datasets: list of all dataset names as strings
+        :param algorithms: list of all used changepoint algorithms as strings
+        :param metrics: list of all metrics as strings
+        """
         self._result = {}
         self._created = datetime.datetime.now()
         self._last_updated = self._created
@@ -50,12 +56,18 @@ class CPDFullResult:
         self._metrics = metrics
         self._errors = []
 
-    def add_dataset_result(self, dataset_result: CPDDatasetResult):
+    def add_dataset_result(self, dataset_result: CPDDatasetResult) -> None:
+        """Add a calculated dataset result to the FullResult
+        :param dataset_result: the dataset result to add
+        """
         self._result = self._result | dataset_result.get_result_as_dict()
         self._errors += dataset_result.get_errors_as_list()
         self._last_updated = datetime.datetime.now()
 
-    def get_result_as_dict(self):
+    def get_result_as_dict(self) -> dict:
+        """Return the complete result with all dataset results and metadata as python dict
+        :return: the result as python dict
+        """
         return {
             "datasets": self._datasets,
             "algorithms": self._algorithms,
