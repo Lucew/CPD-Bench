@@ -1,4 +1,5 @@
-from cpdbench.exception import InputValidationException
+from cpdbench.exception.ValidationException import InputValidationException, \
+    DatasetValidationException
 from cpdbench.interface import CPDDataset
 from cpdbench.task.Task import Task
 
@@ -20,9 +21,15 @@ class DatasetFetchTask(Task):
             raise InputValidationException("The number of arguments for the dataset task '{0}' is {1} but should be 0."
                                            .format(function_name, len(full_arg_spec.args)))
 
-
-    def validate_input(self, *args) -> None:
-        pass
+    def validate_input(self, *args) -> CPDDataset:
+        try:
+            dataset: CPDDataset = self._function()
+            dataset.init()
+        except Exception as e:
+            raise DatasetValidationException(f"The validation of {get_name_of_function(self._function)} failed.") \
+                from e
+        else:
+            return dataset
 
     def execute(self) -> CPDDataset:
         dataset: CPDDataset = self._function()

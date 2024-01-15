@@ -1,4 +1,4 @@
-from cpdbench.control.TestbenchController import TestbenchController
+from cpdbench.control.TestbenchController import TestbenchController, TestrunType
 from cpdbench.utils import Logger, BenchConfig
 
 
@@ -22,7 +22,20 @@ class CPDBench:
         self._logger.info(f"Got {len(self._datasets)} datasets, {len(self._algorithms)} algorithms and "
                           f"{len(self._metrics)} metrics")
         bench = TestbenchController()
-        bench.execute_testrun(self._datasets, self._algorithms, self._metrics)
+        bench.execute_testrun(TestrunType.NORMAL_RUN, self._datasets, self._algorithms, self._metrics)
+
+    def validate(self, config_file: str = 'config.yml') -> None:
+        """Validate the given functions for a full bench run. Throws an exception if the validation fails.
+        :param config_file: Path to the CDPBench configuration file; defaults to 'config.yml'
+        """
+        BenchConfig.load_config(config_file)
+        self._logger = Logger.get_application_logger()
+        self._logger.debug('CPDBench object created')
+        self._logger.info("Starting CPDBench validator")
+        self._logger.info(f"Got {len(self._datasets)} datasets, {len(self._algorithms)} algorithms and "
+                          f"{len(self._metrics)} metrics")
+        bench = TestbenchController()
+        bench.execute_testrun(TestrunType.VALIDATION_RUN, self._datasets, self._algorithms, self._metrics)
 
     def dataset(self, function):
         """Decorator for dataset functions which create CPDDataset objects"""

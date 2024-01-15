@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 from numpy import ndarray
 
-from cpdbench.exception import InputValidationException
+from cpdbench.exception.ValidationException import InputValidationException, AlgorithmValidationException
 from cpdbench.task.Task import Task
 
 import inspect
@@ -24,8 +24,14 @@ class AlgorithmExecutionTask(Task):
                                            f"is {len(full_arg_spec.args)} but should be "
                                            "1: (signal)")
 
-    def validate_input(self, *args) -> None:
-        pass
+    def validate_input(self, data: ndarray) -> tuple[Iterable, Iterable]:
+        try:
+            alg_res_index, alg_res_scores = self._function(data)
+        except Exception as e:
+            raise AlgorithmValidationException(f"The validation of {get_name_of_function(self._function)} failed.") \
+                from e
+        else:
+            return alg_res_index, alg_res_scores
 
     def execute(self, data: ndarray) -> tuple[Iterable, Iterable]:
         alg_res_index, alg_res_scores = self._function(data)

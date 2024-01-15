@@ -22,3 +22,10 @@ class CPDDataset(ABC):
         :return: A 2D ndarray containing the timeseries (time x feature)
         """
         pass
+
+    @abstractmethod
+    def get_validation_preview(self) -> tuple[ndarray, list[int]]:
+        """Return a smaller part of the complete signal for fast runtime validation.
+        :return: A 2D ndarray containing the timeseries (time x feature)
+        """
+        pass

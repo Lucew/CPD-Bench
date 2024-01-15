@@ -30,10 +30,13 @@ class Task(ABC):
         pass
 
     @abstractmethod
-    def validate_input(self, *args) -> None:
+    def validate_input(self, *args) -> any:
         """Validates the task in combination with some input arguments.
         Throws an exception if the validation fails.
         """
+        # Validiert wird:
+        # - Fehler, wenn Algorithmus aufgerufen wird?
+        # - Fehler, wenn Metrik aufgerufen wird?
         pass
 
     @abstractmethod
