@@ -3,4 +3,4 @@ pyyaml
 tqdm
 
 # Temporary requirements for tests
-changepoynt
+changepoynt == 0.0.7

@@ -28,6 +28,7 @@ def _load_logging_config(logging_config: dict) -> None:
 
     # log-level
     global logging_level
+    # TODO: Groß- und Kleinschreibung egal
     if logging_config['log-level'] == 'DEBUG':
         logging_level = logging.DEBUG
     elif logging_config['log-level'] == 'INFO':
@@ -39,6 +40,7 @@ def _load_logging_config(logging_config: dict) -> None:
     elif logging_config['log-level'] == 'CRITICAL':
         logging_level = logging.CRITICAL
     else:
+        # TODO: Warning wenn dieser Fall eintritt
         logging_level = logging.INFO
 
 

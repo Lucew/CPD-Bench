@@ -2,6 +2,8 @@ from cpdbench.interface.CPD2DNdarrayDataset import CPD2DNdarrayDataset
 from cpdbench.interface.CPDBench import CPDBench
 import numpy as np
 from changepoynt.algorithms.sst import SST
+from changepoynt.algorithms.fluss import FLUSS
+from changepoynt.algorithms.clasp import CLASP
 
 cpdb = CPDBench()
 
@@ -26,13 +28,20 @@ def get_bitcoin_dataset():
 
 @cpdb.algorithm
 def execute_esst(signal):
-    detector = SST(30)
+    detector = SST(90, method='rsvd')
+     #detector = FLUSS(100)
+    # detector = CLASP()
     sig = signal[0]
+    print("begin transform")
     res = detector.transform(sig)
     indexes = [res.argmax()]
     confidences = [1.0]
     # raise Exception
     return indexes, confidences
+
+#@cpdb.algorithm
+def execute_test(signal):
+    pass
 
 
 @cpdb.metric
@@ -47,3 +56,5 @@ if __name__ == '__main__':
     # one, two = execute_esst(dataset)
     # print("done")
     cpdb.start()
+
+# TODO: Datasets blockieren sich

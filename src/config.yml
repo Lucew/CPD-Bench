@@ -1,4 +1,4 @@
 logging:
   filename: cpdbench-log.txt
-  log-level: INFO
+  log-level: DEBUG
 # multiprocessing: true/false
