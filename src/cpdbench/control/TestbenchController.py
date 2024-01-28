@@ -6,6 +6,7 @@ import numpy as np
 
 from cpdbench.control.TestrunController import TestrunController
 from cpdbench.control.ValidationRunController import ValidationRunController
+from cpdbench_frontend.StreamlitFrontendRenderer import StreamlitFrontendRenderer
 
 
 class TestrunType(Enum):
@@ -48,6 +49,7 @@ class TestbenchController:
         result = controller.execute_run(function_map)
         self._output_result(result.get_result_as_dict())
         logging.shutdown()
+        # StreamlitFrontendRenderer().show_results(result)
 
     def _output_result(self, result_dict: dict) -> None:
         """Outputs a result dict correctly on console and in a file

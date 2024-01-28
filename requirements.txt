@@ -1,6 +1,7 @@
 numpy
 pyyaml
 tqdm
+streamlit
 
 # Temporary requirements for tests
 changepoynt == 0.0.7
