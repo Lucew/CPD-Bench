@@ -14,8 +14,15 @@ def get_bitcoin_dataset():
     return example_functions.dataset_get_bitcoin_dataset()
 
 
+# @cpdb.algorithm
+# def execute_esst(signal):
+#     return example_functions.algorithm_execute_single_esst(signal)
+
+
 @cpdb.algorithm
-def execute_esst(signal):
+def execute_esst_test(signal, *, abc, bound):
+    print(abc)
+    print(bound)
     return example_functions.algorithm_execute_single_esst(signal)
 
 

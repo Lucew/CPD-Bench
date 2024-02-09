@@ -1,8 +1,7 @@
 import yaml
 import logging
 
-# TODO: Ok, hier PyYaml zu importieren? Oder eigene Lib schreiben?
-# TODO: Singleton einfach als Modul umgesetzt, ok?
+from cpdbench.utils.UserConfig import UserConfig
 
 # Konfigurierbar:
 # Welches Log-Level wird gedruckt?
@@ -12,12 +11,21 @@ import logging
 logging_file_name: str = 'cpdbench-log.txt'
 logging_level: int = logging.INFO
 
+# USER PARAMETERS
+_user_config = None
+
+
+def get_user_config():
+    return _user_config
+
 
 def load_config(config_file='config.yml') -> bool:
     yaml_config = _load_config_from_file(config_file)
     if yaml_config is None:
         return False
     _load_logging_config(yaml_config['logging'])
+    global _user_config
+    _user_config = UserConfig(yaml_config['user'])
     return True
 
 
@@ -52,3 +60,8 @@ def _load_config_from_file(config_file: str):
         return None
     else:
         return yaml_config
+
+# RUNTIME VARIABLES
+# Ansätze:
+# 1. Pro Task: optional Config-Parameter => über definierte Schnittstelle abrufen von Param
+# 2. keyword-Parameter nutzen

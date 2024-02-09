@@ -12,17 +12,18 @@ from cpdbench.utils.Utils import get_name_of_function
 
 class AlgorithmExecutionTask(Task):
     def __init__(self, function):
-        self._function = function
+        super().__init__(function)
 
     def validate_task(self) -> None:
         # Check number of args
-        full_arg_spec = inspect.getfullargspec(self._function)
-        if len(full_arg_spec.args) != 1:
-            # Wrong number of arguments
-            function_name = get_name_of_function(self._function)
-            raise InputValidationException(f"The number of arguments for the algorithm task '{function_name}' "
-                                           f"is {len(full_arg_spec.args)} but should be "
-                                           "1: (signal)")
+        # full_arg_spec = inspect.getfullargspec(self._function)
+        # if len(full_arg_spec.args) != 1:
+        #     # Wrong number of arguments
+        #     function_name = get_name_of_function(self._function)
+        #     raise InputValidationException(f"The number of arguments for the algorithm task '{function_name}' "
+        #                                    f"is {len(full_arg_spec.args)} but should be "
+        #                                    "1: (signal)")
+        pass
 
     def validate_input(self, data: ndarray) -> tuple[Iterable, Iterable]:
         try:
@@ -38,4 +39,4 @@ class AlgorithmExecutionTask(Task):
         return alg_res_index, alg_res_scores
 
     def get_task_name(self) -> str:
-        return "algorithm:" + self._function.__name__ #TODO: fstring, String Concatenation vermeiden
+        return "algorithm:" + self._function_name #TODO: fstring, String Concatenation vermeiden

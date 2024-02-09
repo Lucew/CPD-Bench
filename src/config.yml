@@ -2,3 +2,17 @@ logging:
   filename: cpdbench-log.txt
   log-level: DEBUG
 # multiprocessing: true/false
+
+
+
+
+user:
+  bound: 30
+  element: [5919, 39319, 313]
+  dataset-executions:
+
+  algorithm-executions:
+    - abc: 331
+    - abc: 333
+    - abc: 3930
+  metric-executions:

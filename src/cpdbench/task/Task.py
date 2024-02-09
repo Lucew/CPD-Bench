@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
+import functools
 
 
 class TaskType(Enum):
@@ -13,6 +14,13 @@ class Task(ABC):
     """Abstract class for a Task object which defines a list of operations.
     This task has a name, can be validated, and executed.
     """
+
+    def __init__(self, function):
+        self._function = function
+        if isinstance(function, functools.partial):
+            self._function_name = function.func.__name__
+        else:
+            self._function_name = function.__name__
 
     @abstractmethod
     def execute(self, *args) -> any:
