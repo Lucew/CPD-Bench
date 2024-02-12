@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 import functools
+import uuid
 
 
 class TaskType(Enum):
@@ -15,12 +16,14 @@ class Task(ABC):
     This task has a name, can be validated, and executed.
     """
 
-    def __init__(self, function):
+    def __init__(self, function, counter=0, param_dict=None):
         self._function = function
         if isinstance(function, functools.partial):
             self._function_name = function.func.__name__
         else:
             self._function_name = function.__name__
+        self._task_name = self._function_name + ":" + str(counter)
+        self._param_dict = param_dict
 
     @abstractmethod
     def execute(self, *args) -> any:
@@ -53,3 +56,9 @@ class Task(ABC):
         :return: task name as string
         """
         pass
+
+    def get_param_dict(self) -> dict:
+        """Returns the parameters this task contains.
+        :return: the parameters as dictionary
+        """
+        return self._param_dict

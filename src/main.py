@@ -5,7 +5,7 @@ cpdb = CPDBench()
 
 
 @cpdb.dataset
-def get_apple_dataset():
+def get_apple_dataset(*, bound):
     return example_functions.dataset_get_apple_dataset()
 
 

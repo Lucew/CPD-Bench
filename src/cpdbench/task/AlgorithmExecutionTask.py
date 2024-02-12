@@ -11,8 +11,8 @@ from cpdbench.utils.Utils import get_name_of_function
 
 
 class AlgorithmExecutionTask(Task):
-    def __init__(self, function):
-        super().__init__(function)
+    def __init__(self, function, counter, param_dict=None):
+        super().__init__(function, counter, param_dict)
 
     def validate_task(self) -> None:
         # Check number of args
@@ -39,4 +39,4 @@ class AlgorithmExecutionTask(Task):
         return alg_res_index, alg_res_scores
 
     def get_task_name(self) -> str:
-        return "algorithm:" + self._function_name #TODO: fstring, String Concatenation vermeiden
+        return "algorithm:" + self._task_name #TODO: fstring, String Concatenation vermeiden

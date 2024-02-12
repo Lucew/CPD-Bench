@@ -7,8 +7,8 @@ from cpdbench.utils.Utils import get_name_of_function
 
 
 class MetricExecutionTask(Task):
-    def __init__(self, function):
-        super().__init__(function)
+    def __init__(self, function, counter, param_dict=None):
+        super().__init__(function, counter, param_dict)
 
     def execute(self, indexes: Iterable, scores: Iterable, ground_truths: Iterable) -> float:
         return self._function(indexes, scores, ground_truths)
@@ -34,4 +34,4 @@ class MetricExecutionTask(Task):
             return res
 
     def get_task_name(self) -> str:
-        return "metric:" + self._function_name
+        return "metric:" + self._task_name

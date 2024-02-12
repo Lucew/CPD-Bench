@@ -36,6 +36,9 @@ class CPDDatasetResult:
             self._metric_scores[a] = {}
 
         self._errors = []
+        self._parameters = ({self._dataset: dataset.get_param_dict()}
+                            | {task.get_task_name(): task.get_param_dict() for task in algorithms}
+                            | {task.get_task_name(): task.get_param_dict() for task in metrics})
 
     def add_algorithm_result(self, indexes: list[int], scores: list[float], algorithm: str) -> None:
         """Adds an algorithm result with indexes and confidence scores to the result container.
@@ -103,3 +106,6 @@ class CPDDatasetResult:
             }
             for error in self._errors
         ]
+
+    def get_parameters(self) -> dict:
+        return self._parameters

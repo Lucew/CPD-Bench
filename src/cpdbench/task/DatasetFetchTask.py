@@ -10,8 +10,8 @@ from cpdbench.utils.Utils import get_name_of_function
 
 
 class DatasetFetchTask(Task):
-    def __init__(self, function):
-        super().__init__(function)
+    def __init__(self, function, counter, param_dict=None):
+        super().__init__(function, counter, param_dict)
 
     def validate_task(self) -> None:
         pass
@@ -39,4 +39,4 @@ class DatasetFetchTask(Task):
         return dataset
 
     def get_task_name(self) -> str:
-        return "dataset:" + self._function_name
+        return "dataset:" + self._task_name

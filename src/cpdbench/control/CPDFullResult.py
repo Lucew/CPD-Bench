@@ -55,6 +55,7 @@ class CPDFullResult:
         self._algorithms = algorithms
         self._metrics = metrics
         self._errors = []
+        self._parameters = {}
 
     def add_dataset_result(self, dataset_result: CPDDatasetResult) -> None:
         """Add a calculated dataset result to the FullResult
@@ -63,6 +64,7 @@ class CPDFullResult:
         self._result = self._result | dataset_result.get_result_as_dict()
         self._errors += dataset_result.get_errors_as_list()
         self._last_updated = datetime.datetime.now()
+        self._parameters = self._parameters | dataset_result.get_parameters()
 
     def get_result_as_dict(self) -> dict:
         """Return the complete result with all dataset results and metadata as python dict
@@ -74,6 +76,7 @@ class CPDFullResult:
             "metrics": self._metrics,
             "created": self._created.strftime("%m/%d/%Y, %H:%M:%S"),
             "last_updated": self._last_updated.strftime("%m/%d/%Y, %H:%M:%S"),
+            "parameters": self._parameters,
             "results": self._result,
             "errors": self._errors
         }

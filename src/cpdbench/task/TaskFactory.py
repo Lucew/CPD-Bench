@@ -7,17 +7,9 @@ from cpdbench.task.DatasetFetchTask import DatasetFetchTask
 from cpdbench.task.MetricExecutionTask import MetricExecutionTask
 from cpdbench.task.Task import TaskType, Task
 import cpdbench.utils.BenchConfig as BenchConfig
+from cpdbench.utils import Logger
 from cpdbench.utils.Utils import get_name_of_function
 from functools import partial
-
-
-def _generate_task_object(function: Callable, task_type: TaskType):
-    if task_type == TaskType.DATASET_FETCH:
-        return DatasetFetchTask(function)
-    elif task_type == TaskType.ALGORITHM_EXECUTION:
-        return AlgorithmExecutionTask(function)
-    elif task_type == TaskType.METRIC_EXECUTION:
-        return MetricExecutionTask(function)
 
 
 class TaskFactory:
@@ -25,6 +17,8 @@ class TaskFactory:
 
     def __init__(self):
         self._user_config = BenchConfig.get_user_config()
+        self._logger = Logger.get_application_logger()
+        self._task_counter = 0
 
     def create_tasks(self, function: Callable, task_type: TaskType) -> list[Task]:
         """Creates a correct task object based on the given task type.
@@ -32,12 +26,21 @@ class TaskFactory:
         :param task_type: the type of the task to be created
         :return: the constructed task object
         """
-        user_params = [param.name for param in inspect.signature(function).parameters.values() if param.kind ==
-                       param.KEYWORD_ONLY]
-        if user_params is None or len(user_params) == 0:
-            return [_generate_task_object(function, task_type)]
+        all_params = [param.name for param in inspect.signature(function).parameters.values() if param.kind ==
+                      param.KEYWORD_ONLY]
+        global_params = [param for param in all_params if self._user_config.check_if_global_param(param)]
+
+        if all_params is None or len(all_params) == 0:
+            # Easy case: no parameter
+            task = self._generate_task_object(function,None, task_type)
+            self._logger.info(f"Created task {task.get_task_name()}")
+            self._task_counter += 1
+            return [task]
         param_values = [{} for _ in range(self._user_config.get_number_of_executions(task_type))]
-        for param in user_params:
+        if len(param_values) == 0:
+            param_values = [{}]
+
+        for param in all_params:
             try:
                 vals = self._user_config.get_user_param(param, task_type)
             except Exception as e:
@@ -47,13 +50,24 @@ class TaskFactory:
                     raise e
             else:
                 for i in range(len(param_values)):
-                    if len(param_values) == len(vals):
-                        param_values[i].update({param: vals[i]})  # execution param
+                    if param in global_params:
+                        param_values[i].update({param: vals[0]})  # global param # TODO: was wenn param wo fehlt?
                     else:
-                        param_values[i].update({param: vals[0]})  # global param
+                        param_values[i].update({param: vals[i]})  # execution param
 
         tasks = []
         for param_dict in param_values:
             function_with_params = partial(function, **param_dict)
-            tasks.append(_generate_task_object(function_with_params, task_type))
+            task = self._generate_task_object(function_with_params, param_dict, task_type)
+            self._task_counter += 1
+            self._logger.info(f"Created task {task.get_task_name()} with following parameters: {str(param_dict)}")
+            tasks.append(task)
         return tasks
+
+    def _generate_task_object(self, function: Callable, param_dict: dict, task_type: TaskType):
+        if task_type == TaskType.DATASET_FETCH:
+            return DatasetFetchTask(function, self._task_counter, param_dict)
+        elif task_type == TaskType.ALGORITHM_EXECUTION:
+            return AlgorithmExecutionTask(function, self._task_counter, param_dict)
+        elif task_type == TaskType.METRIC_EXECUTION:
+            return MetricExecutionTask(function, self._task_counter, param_dict)
