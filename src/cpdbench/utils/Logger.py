@@ -35,7 +35,7 @@ def init_logger():
     console_handler = logging.StreamHandler()
     general_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     console_handler.setFormatter(general_formatter)
-    console_handler.setLevel(logging.ERROR)
+    console_handler.setLevel(BenchConfig.logging_console_level)
     _app_logger.addHandler(console_handler)
 
    # open('cpdbench-log.txt', 'w').close()

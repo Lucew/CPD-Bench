@@ -10,6 +10,10 @@ from cpdbench.utils.UserConfig import UserConfig
 # LOGGING
 logging_file_name: str = 'cpdbench-log.txt'
 logging_level: int = logging.INFO
+logging_console_level: int = logging.ERROR
+
+# MULTIPROCESSING
+multiprocessing_enabled = True
 
 # USER PARAMETERS
 _user_config = None
@@ -23,9 +27,16 @@ def load_config(config_file='config.yml') -> bool:
     yaml_config = _load_config_from_file(config_file)
     if yaml_config is None:
         return False
+
     _load_logging_config(yaml_config['logging'])
+
+    # multiprocessing enabled
+    global multiprocessing_enabled
+    multiprocessing_enabled = False if yaml_config['multiprocessing'].upper() == 'FALSE' else True
+
     global _user_config
     _user_config = UserConfig(yaml_config['user'])
+
     return True
 
 
@@ -36,20 +47,26 @@ def _load_logging_config(logging_config: dict) -> None:
 
     # log-level
     global logging_level
-    # TODO: Groß- und Kleinschreibung egal
-    if logging_config['log-level'] == 'DEBUG':
-        logging_level = logging.DEBUG
-    elif logging_config['log-level'] == 'INFO':
-        logging_level = logging.INFO
-    elif logging_config['log-level'] == 'WARNING' or logging_config['log-level'] == "WARN":
-        logging_level = logging.WARNING
-    elif logging_config['log-level'] == 'ERROR':
-        logging_level = logging.ERROR
-    elif logging_config['log-level'] == 'CRITICAL':
-        logging_level = logging.CRITICAL
+    logging_level = _get_log_level(logging_config, 'log-level')
+
+    # log-level console
+    global logging_console_level
+    logging_console_level = _get_log_level(logging_config, 'log-level-console')
+
+
+def _get_log_level(config, param_name):
+    if config[param_name].upper() == 'DEBUG':
+        return logging.DEBUG
+    elif config[param_name].upper() == 'INFO':
+        return logging.INFO
+    elif config[param_name].upper() == 'WARNING' or config[param_name].upper() == "WARN":
+        return logging.WARNING
+    elif config[param_name].upper() == 'ERROR':
+        return logging.ERROR
+    elif config[param_name].upper() == 'CRITICAL':
+        return logging.CRITICAL
     else:
-        # TODO: Warning wenn dieser Fall eintritt
-        logging_level = logging.INFO
+        return logging.INFO
 
 
 def _load_config_from_file(config_file: str):

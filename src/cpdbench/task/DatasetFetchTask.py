@@ -1,10 +1,6 @@
-from cpdbench.exception.ValidationException import InputValidationException, \
-    DatasetValidationException
-from cpdbench.interface import CPDDataset
+from cpdbench.exception.ValidationException import DatasetValidationException
+from cpdbench.dataset import CPDDataset
 from cpdbench.task.Task import Task
-import functools
-
-import inspect
 
 from cpdbench.utils.Utils import get_name_of_function
 

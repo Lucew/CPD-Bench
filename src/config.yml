@@ -1,7 +1,8 @@
 logging:
   filename: cpdbench-log.txt
   log-level: DEBUG
-# multiprocessing: true/false
+  log-level-console: ERROR
+multiprocessing: False
 
 
 

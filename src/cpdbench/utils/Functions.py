@@ -4,7 +4,7 @@ Contains some example datasets, algorithms and metrics for trying out the testbe
 import numpy as np
 from changepoynt.algorithms.sst import SST
 
-from cpdbench.interface.CPD2DNdarrayDataset import CPD2DNdarrayDataset
+from cpdbench.dataset.CPD2DNdarrayDataset import CPD2DNdarrayDataset
 
 
 def metric_accuracy_in_allowed_windows(indexes, scores, ground_truth):

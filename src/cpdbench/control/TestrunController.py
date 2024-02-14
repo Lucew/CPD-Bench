@@ -10,7 +10,7 @@ from cpdbench.control.ExecutionController import ExecutionController
 from cpdbench.exception.ValidationException import ValidationException
 from cpdbench.task.Task import TaskType
 from cpdbench.task.TaskFactory import TaskFactory
-from cpdbench.utils import Utils, Logger
+from cpdbench.utils import Utils, Logger, BenchConfig
 from tqdm import tqdm
 
 
@@ -59,7 +59,8 @@ class TestrunController(ExecutionController):
         logging_thread = threading.Thread(target=logger_thread, args=(q, self._logger))
         logging_thread.start()
 
-        with ProcessPoolExecutor(max_workers=None) as executor:
+        max_workers = None if BenchConfig.multiprocessing_enabled else 1
+        with ProcessPoolExecutor(max_workers=max_workers) as executor:
             for dataset in tasks["datasets"]:
                 dataset_results.append(executor.submit(create_ds_executor_and_run,
                                                        dataset,
@@ -79,8 +80,3 @@ class TestrunController(ExecutionController):
         self._logger.info("Collected all datasets")
         self._logger.info("Finished testrun. Printing results")
         return run_result
-
-
-
-
-
