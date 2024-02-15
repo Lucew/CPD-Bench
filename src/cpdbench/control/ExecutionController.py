@@ -28,7 +28,7 @@ class ExecutionController(ABC):
             tasks = task_factory.create_tasks(dataset_function, TaskType.DATASET_FETCH)
             try:
                 for task in tasks:
-                    task.validate_task() #TODO: Validation mit Parametern reparieren
+                    task.validate_task()
             except ValidationException as e:
                 self._logger.exception(e)
             else:

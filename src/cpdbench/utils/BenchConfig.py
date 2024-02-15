@@ -32,7 +32,7 @@ def load_config(config_file='config.yml') -> bool:
 
     # multiprocessing enabled
     global multiprocessing_enabled
-    multiprocessing_enabled = False if yaml_config['multiprocessing'].upper() == 'FALSE' else True
+    multiprocessing_enabled = False if str(yaml_config['multiprocessing']).upper() == 'FALSE' else True
 
     global _user_config
     _user_config = UserConfig(yaml_config['user'])

@@ -1,4 +1,6 @@
-from cpdbench.exception.ValidationException import DatasetValidationException
+import inspect
+
+from cpdbench.exception.ValidationException import DatasetValidationException, InputValidationException
 from cpdbench.dataset import CPDDataset
 from cpdbench.task.Task import Task
 
@@ -10,14 +12,13 @@ class DatasetFetchTask(Task):
         super().__init__(function, counter, param_dict)
 
     def validate_task(self) -> None:
-        pass
-        # # Check number of args
-        # full_arg_spec = inspect.getfullargspec(self._function)
-        # if len(full_arg_spec.args) > 0:
-        #     # Wrong number of arguments
-        #     function_name = get_name_of_function(self._function)
-        #     raise InputValidationException("The number of arguments for the dataset task '{0}' is {1} but should be 0."
-        #                                    .format(function_name, len(full_arg_spec.args)))
+        # Check number of args
+        full_arg_spec = inspect.getfullargspec(self._function)
+        if len(full_arg_spec.args) > 0:
+            # Wrong number of arguments
+            function_name = get_name_of_function(self._function)
+            raise InputValidationException("The number of arguments for the dataset task '{0}' is {1} but should be 0."
+                                           .format(function_name, len(full_arg_spec.args)))
 
     def validate_input(self, *args) -> CPDDataset:
         try:

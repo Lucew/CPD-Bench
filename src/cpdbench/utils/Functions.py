@@ -7,13 +7,11 @@ from changepoynt.algorithms.sst import SST
 from cpdbench.dataset.CPD2DNdarrayDataset import CPD2DNdarrayDataset
 
 
-def metric_accuracy_in_allowed_windows(indexes, scores, ground_truth):
+def metric_accuracy_in_allowed_windows(indexes, scores, ground_truth, *, window_size):
     """Calculate the accuracy with a small deviation window.
     The result is the percentage of ground truth values, for which the algorithm got at least one fitting index in the
     surrounding window. The scores are ignored.
     """
-    window_size = 50  # Change according to own dataset
-
     accuracy = 0
     for gt in ground_truth:
         range_of_gt = range(int(gt - (window_size / 2)), int(gt + (window_size / 2)))

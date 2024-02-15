@@ -13,8 +13,7 @@ user:
   dataset-executions:
 
   algorithm-executions:
-    - abc: 331
-      dsfsd: 3324
-    - abcs: 333
-    - abc: 3930
+
   metric-executions:
+    - window_size: 50
+    - window_size: 21

@@ -16,14 +16,13 @@ class AlgorithmExecutionTask(Task):
 
     def validate_task(self) -> None:
         # Check number of args
-        # full_arg_spec = inspect.getfullargspec(self._function)
-        # if len(full_arg_spec.args) != 1:
-        #     # Wrong number of arguments
-        #     function_name = get_name_of_function(self._function)
-        #     raise InputValidationException(f"The number of arguments for the algorithm task '{function_name}' "
-        #                                    f"is {len(full_arg_spec.args)} but should be "
-        #                                    "1: (signal)")
-        pass
+        full_arg_spec = inspect.getfullargspec(self._function)
+        if len(full_arg_spec.args) != 1:
+            # Wrong number of arguments
+            function_name = get_name_of_function(self._function)
+            raise InputValidationException(f"The number of arguments for the algorithm task '{function_name}' "
+                                           f"is {len(full_arg_spec.args)} but should be "
+                                           "1: (signal)")
 
     def validate_input(self, data: ndarray) -> tuple[Iterable, Iterable]:
         try:
