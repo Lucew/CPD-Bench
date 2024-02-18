@@ -8,7 +8,6 @@ cpdb = CPDBench()
 
 @cpdb.dataset
 def get_apple_dataset():
-    time.sleep(20)
     return example_functions.dataset_get_apple_dataset()
 
 

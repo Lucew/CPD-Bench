@@ -28,19 +28,19 @@ class DatasetExecutor:
         try:
             self.logger.info(f"Start running tasks for dataset {self._dataset_task.get_task_name()}")
             self.logger.debug(f"Executing dataset task {self._dataset_task.get_task_name()}")
+            runtime = time.perf_counter()
             dataset = self._dataset_task.execute()
-            self.logger.debug(f"Finished dataset task {self._dataset_task.get_task_name()}")
+            runtime = time.perf_counter() - runtime
+            self._result.add_dataset_runtime(runtime)
+            self.logger.debug(f"Finished dataset task {self._dataset_task.get_task_name()}. Took {runtime} seconds.")
         except Exception as e:
             raise CPDDatasetCreationException(self._dataset_task.get_task_name()) from e
         algorithms = []
         with ThreadPoolExecutor(max_workers=None) as executor:
             self.logger.debug(f"Getting signal")
             try:
-                runtime = time.perf_counter()
                 data, ground_truth = dataset.get_signal()
-                runtime = time.perf_counter() - runtime
-                self._result.add_dataset_runtime(runtime)
-                self.logger.debug(f"Got signal. Took {runtime} seconds.")
+                self.logger.debug(f"Got signal.")
             except Exception as e:
                 raise SignalLoadingException(self._dataset_task.get_task_name()) from e
             else:
