@@ -66,13 +66,27 @@ class TestrunController(ExecutionController):
                                                        dataset,
                                                        tasks["algorithms"],
                                                        tasks["metrics"], q))
-            for ds_res in tqdm(dataset_results, desc='Processing datasets'):
-                try:
-                    res = ds_res.result()
-                except Exception as e:
-                    error_list.append(e)
-                else:
-                    run_result.add_dataset_result(res)
+            for i in tqdm(range(len(dataset_results)), desc="Processing datasets"):
+                j = 0
+                while True:
+                    ds_res = dataset_results[j]
+                    try:
+                        res = ds_res.result(2)
+                    except Exception as e:
+                        if e is TimeoutError:
+                            error_list.append(e)
+                            dataset_results.pop(j)
+                            i += 1
+                            break
+                    else:
+                        run_result.add_dataset_result(res)
+                        dataset_results.pop(j)
+                        i += 1
+                        break
+                    j += 1
+                    if j == len(dataset_results):
+                        j = 0
+
         q.put_nowait(None)
         logging_thread.join()
         for error in error_list:

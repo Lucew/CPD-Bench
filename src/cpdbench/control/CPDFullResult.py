@@ -5,6 +5,11 @@
 #   "metrics": [],
 #   "created": 242,
 #   "last_updated": 252,
+#   "runtime":
+#     "total":
+#     "ds1":
+#       "runtime": 34534
+#       "alg1": ...
 #   "results": {
 #     "ds1": {
 #       "amount_features" : 2,
@@ -56,6 +61,7 @@ class CPDFullResult:
         self._metrics = metrics
         self._errors = []
         self._parameters = {}
+        self._runtimes = {}
 
     def add_dataset_result(self, dataset_result: CPDDatasetResult) -> None:
         """Add a calculated dataset result to the FullResult
@@ -65,6 +71,7 @@ class CPDFullResult:
         self._errors += dataset_result.get_errors_as_list()
         self._last_updated = datetime.datetime.now()
         self._parameters = self._parameters | dataset_result.get_parameters()
+        self._runtimes = self._runtimes | dataset_result.get_runtimes()
 
     def get_result_as_dict(self) -> dict:
         """Return the complete result with all dataset results and metadata as python dict
@@ -78,5 +85,6 @@ class CPDFullResult:
             "last_updated": self._last_updated.strftime("%m/%d/%Y, %H:%M:%S"),
             "parameters": self._parameters,
             "results": self._result,
+            "runtimes": self._runtimes,
             "errors": self._errors
         }

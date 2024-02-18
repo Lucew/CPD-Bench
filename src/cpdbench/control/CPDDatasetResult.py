@@ -32,38 +32,48 @@ class CPDDatasetResult:
         self._scores = {}
         self._metric_scores = {}
         # { "1" : { "alg1": { "metr1": 212 } } }
-        for a in self._algorithms:
-            self._metric_scores[a] = {}
 
         self._errors = []
         self._parameters = ({self._dataset: dataset.get_param_dict()}
                             | {task.get_task_name(): task.get_param_dict() for task in algorithms}
                             | {task.get_task_name(): task.get_param_dict() for task in metrics})
 
-    def add_algorithm_result(self, indexes: list[int], scores: list[float], algorithm: str) -> None:
+        self._dataset_runtime = -1
+        self._algorithm_runtimes = {}
+        for a in self._algorithms:
+            self._metric_scores[a] = {}
+
+    def add_dataset_runtime(self, runtime: float) -> None:
+        self._dataset_runtime = runtime
+
+    def add_algorithm_result(self, indexes: list[int], scores: list[float], algorithm: str, runtime: float) -> None:
         """Adds an algorithm result with indexes and confidence scores to the result container.
         :param indexes: list of calculated changepoint indexes
         :param scores: list of calculated confidence scores respective to the indexes list
         :param algorithm: name of the calculated algorithm
+        :param runtime: runtime of the algorithm execution in seconds
         """
 
         if algorithm not in self._algorithms:
             raise ResultSetInconsistentException()
         self._indexes[algorithm] = indexes
         self._scores[algorithm] = scores
+        self._algorithm_runtimes[algorithm] = {}
+        self._algorithm_runtimes[algorithm]["runtime"] = runtime
 
-    def add_metric_score(self, metric_score: float, algorithm: str, metric: str) -> None:
+    def add_metric_score(self, metric_score: float, algorithm: str, metric: str, runtime: float) -> None:
         """Adds a metric result of an algorithm/dataset to the result container.
-
         :param metric_score: calculated metric score as float
         :param algorithm: name of the calculated algorithm
         :param metric: name of the used metric
+        :param runtime: runtime of the metric execution in seconds
         """
 
         if (algorithm not in self._algorithms
                 or metric not in self._metrics):
             raise ResultSetInconsistentException()
         self._metric_scores[algorithm][metric] = metric_score
+        self._algorithm_runtimes[algorithm][metric] = runtime
 
     def add_error(self, exception: Exception, error_type: ErrorType, algorithm: str = None, metric: str = None) -> None:
         """Adds a thrown error to the result container.
@@ -109,3 +119,11 @@ class CPDDatasetResult:
 
     def get_parameters(self) -> dict:
         return self._parameters
+
+    def get_runtimes(self) -> dict:
+        result_dict = {
+            self._dataset: self._algorithm_runtimes | {
+                "runtime": self._dataset_runtime,
+            }
+        }
+        return result_dict

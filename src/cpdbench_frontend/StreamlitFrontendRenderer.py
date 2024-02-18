@@ -46,3 +46,53 @@ class StreamlitFrontendRenderer(FrontendRenderer):
 
 if __name__ == "__main__":
     StreamlitFrontendRenderer().show_results(0)
+
+# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+#
+# app = Dash(__name__, external_stylesheets=external_stylesheets)
+#
+# styles = {
+#     'pre': {
+#         'border': 'thin lightgrey solid',
+#         'overflowX': 'scroll',
+#         'color': 'black'
+#     },
+#     'div': {
+#         'padding': '.3rem',
+#         'width': '80%',
+#         'margin': 'auto',
+#         'boxShadow': 'dimgrey 4px 4px 2px',
+#         'border-radius': '10px',
+#         'backgroundColor': 'white',
+#         'marginTop': '1rem',
+#     },
+#     'dropdown': {
+#         'margin': 'auto',
+#         'width': '50%',
+#         'border-radius': '10px',
+#         'color': 'black'
+#     }
+# }
+#
+# app.layout = html.Div([
+#     html.Div(children=[
+#         html.H1(f'Change Point Scatter Plot',
+#                 style={'fontSize': 40},
+#                 id='header'),
+#     ],
+#         style=styles['div']
+#     ),
+#     html.Div([
+#         dcc.Markdown("""
+#                     **Selection Data**
+#
+#                     Choose the lasso or rectangle tool in the graph's menu
+#                     bar and then select points in the graph.
+#
+#                 """),
+#         html.Pre(id='selected-data', style=styles['pre'])],
+#         style=styles['div'],
+#         hidden=False,
+#         id='selected-data-container'
+#     )
+# ])

@@ -1,4 +1,4 @@
-# TODO: Laufzeiten für alle Tasks
+import time
 from concurrent.futures import ThreadPoolExecutor
 
 from cpdbench.control.CPDDatasetResult import CPDDatasetResult, ErrorType
@@ -36,8 +36,11 @@ class DatasetExecutor:
         with ThreadPoolExecutor(max_workers=None) as executor:
             self.logger.debug(f"Getting signal")
             try:
+                runtime = time.perf_counter()
                 data, ground_truth = dataset.get_signal()
-                self.logger.debug(f"Got signal")
+                runtime = time.perf_counter() - runtime
+                self._result.add_dataset_runtime(runtime)
+                self.logger.debug(f"Got signal. Took {runtime} seconds.")
             except Exception as e:
                 raise SignalLoadingException(self._dataset_task.get_task_name()) from e
             else:
@@ -59,12 +62,14 @@ class DatasetExecutor:
         logger = self.logger.getChild(algorithm.get_task_name())
         try:
             logger.debug(f"Executing algorithm task {algorithm.get_task_name()}")
+            runtime = time.perf_counter()
             indexes, scores = algorithm.execute(dataset)
-            logger.debug(f"Finished algorithm task {algorithm.get_task_name()}")
+            runtime = time.perf_counter() - runtime
+            logger.debug(f"Finished algorithm task {algorithm.get_task_name()}. Took {runtime} seconds")
         except Exception as e:
             raise AlgorithmExecutionException(algorithm.get_task_name(),
                                               self._dataset_task.get_task_name()) from e
-        self._result.add_algorithm_result(indexes, scores, algorithm.get_task_name())
+        self._result.add_algorithm_result(indexes, scores, algorithm.get_task_name(), runtime)
         metrics = []
         logger.debug(f"Starting threads for executing metrics ")
         with ThreadPoolExecutor(max_workers=None) as executor:
@@ -86,10 +91,12 @@ class DatasetExecutor:
         logger = self.logger.getChild(algorithm.get_task_name()).getChild(metric_task.get_task_name())
         logger.debug(f"Executing metric task {metric_task.get_task_name()}")
         try:
+            runtime = time.perf_counter()
             metric_result = metric_task.execute(indexes, scores, ground_truth)
-            logger.debug(f"Finished metric task {metric_task.get_task_name()}")
+            runtime = time.perf_counter() - runtime
+            logger.debug(f"Finished metric task {metric_task.get_task_name()}. Took {runtime} seconds")
         except Exception as e:
             raise MetricExecutionException(metric_task.get_task_name(), algorithm.get_task_name(),
                                            self._dataset_task.get_task_name()) from e
-        self._result.add_metric_score(metric_result, algorithm.get_task_name(), metric_task.get_task_name())
+        self._result.add_metric_score(metric_result, algorithm.get_task_name(), metric_task.get_task_name(), runtime)
         logger.debug("Finished")

@@ -20,8 +20,6 @@
 # cpdbench-log.txt => alle Log-Messages
 # STDERR => ERROR + CRITICAL
 
-# TODO: Logging frei konfigurierbar machen
-
 import logging
 from cpdbench.utils import BenchConfig
 

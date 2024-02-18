@@ -2,7 +2,7 @@ logging:
   filename: cpdbench-log.txt
   log-level: DEBUG
   log-level-console: ERROR
-multiprocessing: False
+multiprocessing: True
 
 
 
@@ -16,4 +16,4 @@ user:
 
   metric-executions:
     - window_size: 50
-    - window_size: 21
+    - window_size: 21 # TODO: The user parameter [windows_size] => eckige Klammern setzen
