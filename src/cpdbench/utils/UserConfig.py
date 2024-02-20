@@ -43,3 +43,6 @@ class UserConfig:
         if global_param is not None:
             return True
         return False
+
+    def get_param_dict(self) -> dict:
+        return self._user_param_dict

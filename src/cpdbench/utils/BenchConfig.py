@@ -3,9 +3,7 @@ import logging
 
 from cpdbench.utils.UserConfig import UserConfig
 
-# Konfigurierbar:
-# Welches Log-Level wird gedruckt?
-# Multiprocessing ein/aus
+_complete_config = None
 
 # LOGGING
 logging_file_name: str = 'cpdbench-log.txt'
@@ -15,6 +13,9 @@ logging_console_level: int = logging.ERROR
 # MULTIPROCESSING
 multiprocessing_enabled = True
 
+# RESULT
+result_file_name: str = 'cpdbench-result.json'
+
 # USER PARAMETERS
 _user_config = None
 
@@ -23,19 +24,44 @@ def get_user_config():
     return _user_config
 
 
+def get_complete_config():
+    return {
+        'logging': {
+            'logging_file_name': logging_file_name,
+            'logging_level': logging_level,
+            'logging_console_level': logging_console_level
+        },
+        'multiprocessing': {
+            'multiprocessing_enabled': multiprocessing_enabled
+        },
+        'result': {
+            'result_file_name': result_file_name
+        },
+        'user_config': _user_config.get_param_dict()
+    }
+
+
 def load_config(config_file='config.yml') -> bool:
-    yaml_config = _load_config_from_file(config_file)
-    if yaml_config is None:
+    global _complete_config
+    _complete_config = _load_config_from_file(config_file)
+    if _complete_config is None:
         return False
 
-    _load_logging_config(yaml_config['logging'])
+    # logging
+    _load_logging_config(_complete_config['logging'])
 
     # multiprocessing enabled
     global multiprocessing_enabled
-    multiprocessing_enabled = False if str(yaml_config['multiprocessing']).upper() == 'FALSE' else True
+    multiprocessing_enabled = False if str(_complete_config['multiprocessing']).upper() == 'FALSE' else True
 
+    # result
+    global result_file_name
+    result_file_name = _complete_config['result']['filename'] if _complete_config['result']['filename'] is not None \
+        else 'cpdbench-result.json'
+
+    # user variables
     global _user_config
-    _user_config = UserConfig(yaml_config['user'])
+    _user_config = UserConfig(_complete_config['user'])
 
     return True
 
@@ -78,7 +104,6 @@ def _load_config_from_file(config_file: str):
     else:
         return yaml_config
 
-# RUNTIME VARIABLES
-# Ansätze:
-# 1. Pro Task: optional Config-Parameter => über definierte Schnittstelle abrufen von Param
-# 2. keyword-Parameter nutzen
+# TODO: Teste:
+# - keine Config-Datei
+# - einzelne Werte fehlen

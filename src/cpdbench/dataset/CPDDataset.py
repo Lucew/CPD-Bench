@@ -29,3 +29,6 @@ class CPDDataset(ABC):
         :return: A 2D ndarray containing the timeseries (time x feature)
         """
         pass
+
+# TODO: an diese Klassen nochmal rangehen
+# TODO: mit memmap => zusätzliche Dataset-Klasse

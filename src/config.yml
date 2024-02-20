@@ -4,9 +4,11 @@ logging:
   log-level-console: ERROR
 multiprocessing: True
 
+result:
+  filename: cpdbench-result.json
 
 
-
+# TODO: Warnings bei ungültigen Werten
 user:
   bound: 30
   element: [5919, 39319, 313]
@@ -16,4 +18,4 @@ user:
 
   metric-executions:
     - window_size: 50
-    - window_size: 21 # TODO: The user parameter [windows_size] => eckige Klammern setzen
+    - window_size: 21

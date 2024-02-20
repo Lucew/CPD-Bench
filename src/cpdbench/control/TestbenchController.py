@@ -6,6 +6,7 @@ import numpy as np
 
 from cpdbench.control.TestrunController import TestrunController
 from cpdbench.control.ValidationRunController import ValidationRunController
+from cpdbench.utils import BenchConfig, Logger
 from cpdbench_frontend.StreamlitFrontendRenderer import StreamlitFrontendRenderer
 
 
@@ -48,6 +49,8 @@ class TestbenchController:
         }
         result = controller.execute_run(function_map)
         self._output_result(result.get_result_as_dict())
+        Logger.get_application_logger().info("CDPBench has finished. The following config has been used:")
+        Logger.get_application_logger().info(BenchConfig.get_complete_config())
         logging.shutdown()
         # StreamlitFrontendRenderer().show_results(result)
 
@@ -58,7 +61,7 @@ class TestbenchController:
         json_string = json.dumps(result_dict, indent=4, cls=ExtendedEncoder)
 
         # file output
-        with open('cpdbench-result.json', 'w') as file:
+        with open(BenchConfig.result_file_name, 'w') as file:
             file.write(json_string)
 
         # console output
