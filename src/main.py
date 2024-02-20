@@ -1,7 +1,5 @@
-import time
-
 from cpdbench.interface.CPDBench import CPDBench
-import cpdbench.utils.Functions as example_functions
+import cpdbench.examples.Functions as example_functions
 
 cpdb = CPDBench()
 
