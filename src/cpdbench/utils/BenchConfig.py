@@ -43,33 +43,41 @@ def get_complete_config():
 
 def load_config(config_file='config.yml') -> bool:
     global _complete_config
+    global _user_config
     _complete_config = _load_config_from_file(config_file)
     if _complete_config is None:
+        _user_config = UserConfig()
         return False
 
     # logging
-    _load_logging_config(_complete_config['logging'])
+    _load_logging_config(_complete_config.get('logging'))
 
     # multiprocessing enabled
     global multiprocessing_enabled
-    multiprocessing_enabled = False if str(_complete_config['multiprocessing']).upper() == 'FALSE' else True
+    multiprocessing_enabled = False if str(_complete_config.get('multiprocessing')).upper() == 'FALSE' else True
 
     # result
     global result_file_name
-    result_file_name = _complete_config['result']['filename'] if _complete_config['result']['filename'] is not None \
-        else 'cpdbench-result.json'
+    result = _complete_config.get('result')
+    if result is not None:
+        res_filename = result.get('filename')
+        if res_filename is not None:
+            result_file_name = res_filename
 
     # user variables
-    global _user_config
-    _user_config = UserConfig(_complete_config['user'])
+    _user_config = UserConfig(_complete_config.get('user'))
 
     return True
 
 
 def _load_logging_config(logging_config: dict) -> None:
+    if logging_config is None:
+        return
     # filename
     global logging_file_name
-    logging_file_name = logging_config['filename']
+    filename = logging_config.get('filename')
+    if filename is not None:
+        logging_file_name = filename
 
     # log-level
     global logging_level
@@ -81,6 +89,8 @@ def _load_logging_config(logging_config: dict) -> None:
 
 
 def _get_log_level(config, param_name):
+    if config.get(param_name) is None:
+        return logging.INFO
     if config[param_name].upper() == 'DEBUG':
         return logging.DEBUG
     elif config[param_name].upper() == 'INFO':
@@ -100,6 +110,7 @@ def _load_config_from_file(config_file: str):
         with open(config_file, 'r') as config_file_stream:
             yaml_config = yaml.safe_load(config_file_stream)
     except OSError:
+        print("WARNING: config file not found!")
         return None
     else:
         return yaml_config

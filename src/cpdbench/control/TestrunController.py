@@ -94,3 +94,4 @@ class TestrunController(ExecutionController):
         self._logger.info("Collected all datasets")
         self._logger.info("Finished testrun. Printing results")
         return run_result
+
