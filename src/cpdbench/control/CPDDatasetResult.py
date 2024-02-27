@@ -44,7 +44,12 @@ class CPDDatasetResult:
             self._metric_scores[a] = {}
 
     def add_dataset_runtime(self, runtime: float) -> None:
-        self._dataset_runtime = runtime
+        """Add the runtime of the dataset task to the result object.
+        Once a runtime was added, the value gets immutable.
+        :param runtime: the runtime of the task in seconds
+        """
+        if self._dataset_runtime == -1:
+            self._dataset_runtime = runtime
 
     def add_algorithm_result(self, indexes: list[int], scores: list[float], algorithm: str, runtime: float) -> None:
         """Adds an algorithm result with indexes and confidence scores to the result container.
@@ -55,7 +60,7 @@ class CPDDatasetResult:
         """
 
         if algorithm not in self._algorithms:
-            raise ResultSetInconsistentException()
+            raise ResultSetInconsistentException(f"Algorithm {algorithm} does not exist")
         self._indexes[algorithm] = indexes
         self._scores[algorithm] = scores
         self._algorithm_runtimes[algorithm] = {}
@@ -71,6 +76,8 @@ class CPDDatasetResult:
 
         if (algorithm not in self._algorithms
                 or metric not in self._metrics):
+            raise ResultSetInconsistentException()
+        if self._indexes.get(algorithm) is None:
             raise ResultSetInconsistentException()
         self._metric_scores[algorithm][metric] = metric_score
         self._algorithm_runtimes[algorithm][metric] = runtime
@@ -118,9 +125,15 @@ class CPDDatasetResult:
         ]
 
     def get_parameters(self) -> dict:
+        """Returns the parameters of all included tasks as dict.
+        :returns: the parameters as python dict
+        """
         return self._parameters
 
     def get_runtimes(self) -> dict:
+        """Returns the runtimes of all included tasks as dict.
+        :returns: the runtimes as python dict
+        """
         if self._dataset_runtime == -1:
             result_dict = {self._dataset: self._algorithm_runtimes}
         else:
