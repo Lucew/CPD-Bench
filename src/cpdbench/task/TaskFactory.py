@@ -20,11 +20,21 @@ class TaskFactory:
         self._logger = Logger.get_application_logger()
         self._task_counter = 0
 
-    def create_tasks(self, function: Callable, task_type: TaskType) -> list[Task]:
-        """Creates a correct task object based on the given task type.
+    def create_task_from_function(self, function: Callable, task_type: TaskType) -> Task:
+        """Creates one task for an unparametrized function.
         :param function: the function to be executed as task
         :param task_type: the type of the task to be created
         :return: the constructed task object
+        """
+        return self._generate_task_object(function, {}, task_type)
+
+    def create_tasks_with_parameters(self, function: Callable, task_type: TaskType) -> list[Task]:
+        """Creates correct task objects based on the given task type and the needed parameters defined in the user
+        config. Because of this, this method can potentially output multiple tasks with the same function
+        but different parameters.
+        :param function: the function to be executed as task
+        :param task_type: the type of the task to be created
+        :return: the constructed task objects
         """
         all_params = [param.name for param in inspect.signature(function).parameters.values() if param.kind ==
                       param.KEYWORD_ONLY]

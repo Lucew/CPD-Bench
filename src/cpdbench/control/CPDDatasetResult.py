@@ -121,9 +121,12 @@ class CPDDatasetResult:
         return self._parameters
 
     def get_runtimes(self) -> dict:
-        result_dict = {
-            self._dataset: self._algorithm_runtimes | {
-                "runtime": self._dataset_runtime,
+        if self._dataset_runtime == -1:
+            result_dict = {self._dataset: self._algorithm_runtimes}
+        else:
+            result_dict = {
+                self._dataset: self._algorithm_runtimes | {
+                    "runtime": self._dataset_runtime,
+                }
             }
-        }
         return result_dict
