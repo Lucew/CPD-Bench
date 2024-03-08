@@ -42,11 +42,17 @@ class TaskFactory:
 
         if all_params is None or len(all_params) == 0:
             # Easy case: no parameter
-            task = self._generate_task_object(function,None, task_type)
+            task = self._generate_task_object(function,{}, task_type)
             self._logger.info(f"Created task {task.get_task_name()}")
             self._task_counter += 1
             return [task]
-        param_values = [{} for _ in range(self._user_config.get_number_of_executions(task_type))]
+        global_params.sort()
+        all_params.sort()
+        if global_params == all_params:
+            # Easy case: only global params
+            param_values = [{}]
+        else:
+            param_values = [{} for _ in range(self._user_config.get_number_of_executions(task_type))]
         if len(param_values) == 0:
             param_values = [{}]
 
