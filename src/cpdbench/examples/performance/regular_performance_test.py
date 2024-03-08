@@ -4,7 +4,7 @@ from changepoynt.algorithms.sst import SST
 
 from cpdbench.dataset.CPD2DNdarrayDataset import CPD2DNdarrayDataset
 from cpdbench.examples import ExampleMetrics
-from cpdbench.interface.CPDBench import CPDBench
+from cpdbench.CPDBench import CPDBench
 
 raw_data = np.load("/Users/dominik/Documents/Projects/CPD-Bench/data/apple_very_big.npy")
 timeseries = raw_data[:, 0]

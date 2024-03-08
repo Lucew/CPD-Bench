@@ -1,4 +1,5 @@
 .idea
+*.dat
 
 src/cpdbench-log.txt
 src/cpdbench-result.json

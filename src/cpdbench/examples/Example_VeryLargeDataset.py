@@ -1,7 +1,7 @@
 from cpdbench.examples.ExampleDatasets import get_extreme_large_dataset_from_file
 from cpdbench.examples.ExampleAlgorithms import numpy_array_accesses
 from cpdbench.examples.ExampleMetrics import metric_accuracy_in_allowed_windows
-from cpdbench.interface.CPDBench import CPDBench
+from cpdbench.CPDBench import CPDBench
 import pathlib
 
 cpdb = CPDBench()

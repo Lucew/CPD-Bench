@@ -1,9 +1,4 @@
 numpy
 pyyaml
 tqdm
-streamlit
-dash
-plotly
-
-# Temporary requirements for tests
 changepoynt == 0.0.7

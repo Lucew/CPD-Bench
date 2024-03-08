@@ -1,4 +1,4 @@
-from cpdbench.interface.CPDBench import CPDBench
+from cpdbench.CPDBench import CPDBench
 import cpdbench.examples.Functions as example_functions
 
 cpdb = CPDBench()
