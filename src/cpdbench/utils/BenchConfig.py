@@ -66,6 +66,8 @@ def load_config(config_file='config.yml') -> bool:
 
     # user variables
     _user_config = UserConfig(_complete_config.get('user'))
+    _user_config.validate_user_config()
+    # TODO: proper Exception Handling here
 
     return True
 

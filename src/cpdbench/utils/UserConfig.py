@@ -41,7 +41,7 @@ class UserConfig:
             return 1
         execution_yaml = self._user_param_dict.get(_get_path_to_execution_array(tasks_type))
         if execution_yaml is None:
-            return 0
+            return 1
         return len(execution_yaml)
 
     def get_user_param(self, param_name: str, task_type: TaskType) -> list:
@@ -78,12 +78,81 @@ class UserConfig:
         :param param_name: the name of the to be checked parameter
         :return: True if the parameter is a global one. False otherwise.
         """
+        is_global_param = None
         global_param = self._user_param_dict.get(param_name)
         if global_param is not None:
-            return True
-        return False
+            is_global_param = True
+        for i in ["dataset-executions", "algorithm-executions", "metric-executions"]:
+            part_dict = self._user_param_dict.get(i)
+            if part_dict is None or part_dict[0] is None:
+                continue
+            user_param = part_dict[0].get(param_name)
+            if user_param is not None:
+                if is_global_param is True:
+                    raise Exception("Parameter both global and execution")
+                else:
+                    return False
+        if is_global_param is None:
+            raise Exception("Parameter not found")
+        else:
+            return is_global_param
 
     def get_param_dict(self) -> dict:
         """Returns all user params as dict for logging purposes.
         :return: the user param dict"""
         return self._user_param_dict
+
+    def validate_user_config(self) -> None:
+        """Validates the user config for common errors.
+        This method returns nothing if the validation is successful, and throws errors
+        if something is wrong with the config, as the bench cannot continue with consistency
+        errors in the config.
+        """
+        # execution params are declared correctly
+        for i in ["dataset-executions", "algorithm-executions", "metric-executions"]:
+            exec_dict = self._user_param_dict.get(i)
+            if exec_dict is None:
+                continue
+            if type(exec_dict) is not list:
+                raise Exception("execution params not declared correctly")
+            for j in exec_dict:
+                if type(j) is not dict:
+                    raise Exception("execution params not declared correctly")
+
+        # execution param is given for all configurations
+        for i in ["dataset-executions", "algorithm-executions", "metric-executions"]:
+            part_dict = self._user_param_dict.get(i)
+            if part_dict is None:
+                continue
+            exec_params = [param for param in part_dict[0]]
+            for j in range(1, len(part_dict)):
+                for par in exec_params:
+                    if part_dict[j].get(par) is None:
+                        raise Exception("Parameter not found in all configurations")
+
+        params = self._get_all_params()
+        for param in params:
+            # parameters are defined as both global and execution
+            is_global_param = None
+            global_param = self._user_param_dict.get(param)
+            if global_param is not None:
+                is_global_param = True
+            for i in ["dataset-executions", "algorithm-executions", "metric-executions"]:
+                part_dict = self._user_param_dict.get(i)
+                if part_dict is None:
+                    continue
+                user_param = part_dict[0].get(param)
+                if user_param is not None:
+                    if is_global_param is True:
+                        raise Exception("Parameter both global and execution")
+
+    def _get_all_params(self) -> set:
+        params = [param for param in self._user_param_dict
+                  if param not in ["dataset-executions", "algorithm-executions", "metric-executions"]]
+        for i in ["dataset-executions", "algorithm-executions", "metric-executions"]:
+            exec_dict = self._user_param_dict.get(i)
+            if exec_dict is None:
+                continue
+            user_params = [param for param in exec_dict[0]]
+            params = params + user_params
+        return set(params)

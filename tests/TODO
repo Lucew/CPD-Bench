@@ -3,3 +3,5 @@ Important:
 - TaskFactory
 - Tasks generell
 - BenchConfig + UserConfig
+- Metrikfunktion
+//TODO: 2+ Runtime Parameter in einer Funktion??
