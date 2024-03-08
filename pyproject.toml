@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cpdbench"
-dynamic = ["version"]
-description = 'A test framework for testing changepoint algorithms'
+version = "0.0.1"
+description = 'A benchmarking framework to run and evaluate changepoint detection algorithms.'
 readme = "README.md"
-requires-python = "3.9"
-license = "MIT"
+requires-python = ">=3.9"
+license = "BSD-2-Clause"
 keywords = []
 authors = [
   { name = "Dominik Sauerer", email = "dominik.sauerer@gmail.com" },
@@ -20,15 +20,17 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = [
+  "numpy",
+  "pyyaml",
+  "tqdm",
+  "changepoynt==0.0.7"
+]
 
 [project.urls]
 Documentation = "https://github.com/Lucew/CPD-Bench#readme"
 Issues = "https://github.com/Lucew/CPD-Bench/issues"
 Source = "https://github.com/Lucew/CPD-Bench"
-
-[tool.hatch.version]
-path = "src/cpdbench/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -74,4 +76,13 @@ exclude_lines = [
   "no cov",
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
+]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "dachboden.py",
+  ".gitignore",
+  "data/",
+  "main.py",
+  "config.yml"
 ]
