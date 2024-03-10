@@ -1,3 +1,12 @@
+"""
+The global configuration Singleton module.
+Contains all configurable parameters for the bench and functions
+to read a given config.yml file.
+
+To be used correctly the function load_config(config_file) has to be called first.
+After this the other functions can be used.
+"""
+
 import yaml
 import logging
 
@@ -20,11 +29,17 @@ result_file_name: str = 'cpdbench-result.json'
 _user_config = None
 
 
-def get_user_config():
+def get_user_config() -> UserConfig:
+    """Returns the UserConfig object if the BenchConfig was already initialized.
+    :return the UserConfig object
+    """
     return _user_config
 
 
-def get_complete_config():
+def get_complete_config() -> dict:
+    """Returns the complete bench configuration including the user config as python dict.
+    :return the config as dict
+    """
     return {
         'logging': {
             'logging_file_name': logging_file_name,
@@ -42,6 +57,12 @@ def get_complete_config():
 
 
 def load_config(config_file='config.yml') -> bool:
+    """Initializes the BenchConfig object with the given config.yml file.
+    If the config_file param is None or the file does not exist, the bench will use the default parameters and this
+    function returns false.
+    :param config_file: The path to the config file
+    :return: True if the config could be loaded correctly, false otherwise.
+    """
     global _complete_config
     global _user_config
     _complete_config = _load_config_from_file(config_file)

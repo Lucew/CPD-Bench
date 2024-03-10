@@ -3,7 +3,7 @@ from cpdbench.utils import Logger, BenchConfig
 
 
 class CPDBench:
-    """Main class for accessing the CDPBench functions"""
+    """Main class for accessing the CPDBench functions"""
 
     def __init__(self):
         self._datasets = []
