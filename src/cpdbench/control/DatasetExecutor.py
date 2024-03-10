@@ -8,6 +8,10 @@ from cpdbench.exception.MetricExecutionException import MetricExecutionException
 
 
 class DatasetExecutor:
+    """Helper class for the TestrunController for the execution of all algorithm and metric tasks
+    of one dataset for better structure.
+    This executor runs on subprocesses in multiprocessing mode."""
+
     def __init__(self, dataset_task, algorithm_tasks, metric_tasks, logger):
         self._result: CPDDatasetResult = None  # Created later
         self._dataset_task = dataset_task
@@ -16,6 +20,7 @@ class DatasetExecutor:
         self.logger = logger
 
     def execute(self):
+        """Executes the entered algorithm and metric tasks."""
         self._result = CPDDatasetResult(self._dataset_task, self._algorithm_tasks, self._metric_tasks)
         try:
             self._execute_dataset()

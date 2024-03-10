@@ -7,15 +7,11 @@ from concurrent.futures import ProcessPoolExecutor
 from cpdbench.control.CPDFullResult import CPDFullResult
 from cpdbench.control.DatasetExecutor import DatasetExecutor
 from cpdbench.control.ExecutionController import ExecutionController
-from cpdbench.exception.ValidationException import ValidationException
-from cpdbench.task.Task import TaskType
-from cpdbench.task.TaskFactory import TaskFactory
-from cpdbench.utils import Utils, Logger, BenchConfig
+from cpdbench.utils import Logger, BenchConfig
 from tqdm import tqdm
 
 
-# Quelle Multiprocessing Logging: https://docs.python.org/3/howto/logging-cookbook.html#logging-to-a-single-file-from-multiple-processes
-def logger_thread(queue, logger):
+def _logger_thread(queue, logger):
     while True:
         record = queue.get()
         if record is None:
@@ -23,7 +19,7 @@ def logger_thread(queue, logger):
         logger.handle(record)
 
 
-def create_ds_executor_and_run(dataset, algorithms, metrics, queue):
+def _create_ds_executor_and_run(dataset, algorithms, metrics, queue):
     logger_name = 'cpdbench.' + dataset.get_task_name()
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
@@ -38,6 +34,10 @@ def create_ds_executor_and_run(dataset, algorithms, metrics, queue):
 
 
 class TestrunController(ExecutionController):
+    """An ExecutionController implementation for the standard run configuration.
+    As described in the paper, all given datasets, algorithms and metrics are
+    completely executed and all results are stored in a CPDFullResult.
+    """
 
     def __init__(self):
         self._logger = Logger.get_application_logger()
@@ -56,13 +56,13 @@ class TestrunController(ExecutionController):
                                    list(map(lambda x: x.get_task_name(), tasks['metrics'])))
         q = multiprocessing.Manager().Queue()
         error_list = []
-        logging_thread = threading.Thread(target=logger_thread, args=(q, self._logger))
+        logging_thread = threading.Thread(target=_logger_thread, args=(q, self._logger))
         logging_thread.start()
 
         max_workers = None if BenchConfig.multiprocessing_enabled else 1
         with ProcessPoolExecutor(max_workers=max_workers) as executor:
             for dataset in tasks["datasets"]:
-                dataset_results.append(executor.submit(create_ds_executor_and_run,
+                dataset_results.append(executor.submit(_create_ds_executor_and_run,
                                                        dataset,
                                                        tasks["algorithms"],
                                                        tasks["metrics"], q))
@@ -94,4 +94,3 @@ class TestrunController(ExecutionController):
         self._logger.info("Collected all datasets")
         self._logger.info("Finished testrun. Printing results")
         return run_result
-

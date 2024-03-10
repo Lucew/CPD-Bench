@@ -19,8 +19,8 @@ class CPDDatasetResult:
     def __init__(self, dataset: Task, algorithms: list[Task], metrics: list[Task]):
         """Constructs a dataset result with the basic attributes
         :param dataset: task which created the dataset
-        :param algorithms: list of all algorithm tasks
-        :param metrics: list of all metric tasks
+        :param algorithms: list of all algorithm tasks which were used with this dataset
+        :param metrics: list of all metric tasks which were used with this dataset
         """
 
         self._dataset = dataset.get_task_name()
@@ -28,10 +28,8 @@ class CPDDatasetResult:
         self._metrics = [m.get_task_name() for m in metrics]
 
         self._indexes = {}
-        # { "1" : { "alg1": [14, 124, 1] } }
         self._scores = {}
         self._metric_scores = {}
-        # { "1" : { "alg1": { "metr1": 212 } } }
 
         self._errors = []
         self._parameters = ({self._dataset: dataset.get_param_dict()}
@@ -44,8 +42,8 @@ class CPDDatasetResult:
             self._metric_scores[a] = {}
 
     def add_dataset_runtime(self, runtime: float) -> None:
-        """Add the runtime of the dataset task to the result object.
-        Once a runtime was added, the value gets immutable.
+        """Adds the runtime of the dataset task to the result object.
+        Once a runtime was added, the value is immutable.
         :param runtime: the runtime of the task in seconds
         """
         if self._dataset_runtime == -1:

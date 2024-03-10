@@ -6,6 +6,10 @@ from cpdbench.utils import Logger
 
 
 class ValidationRunController(ExecutionController):
+    """A run configuration for validation runs.
+    These runs only execute algorithms with a (user defined) subset of the datasets,
+    and do not return the complete result sets.
+    """
 
     def __init__(self):
         self._logger = Logger.get_application_logger()

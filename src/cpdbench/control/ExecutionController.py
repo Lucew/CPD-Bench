@@ -7,15 +7,26 @@ from cpdbench.utils import Utils
 
 
 class ExecutionController(ABC):
+    """Abstract base class for testbench run configurations.
+    Each subclass has to give an execute_run() implementation with the actual run logic.
+    """
 
     def __init__(self, logger):
         self._logger = logger
 
     @abstractmethod
     def execute_run(self, methods: dict) -> any:
+        """Executes the run implemented by this class.
+        :param methods: dictionary with all given input functions, grouped by function type.
+        :return: A result object which can be handed to the user
+        """
         pass
 
-    def _create_tasks(self, methods):
+    def _create_tasks(self, methods: dict) -> dict:
+        """Creates task objects from the entered function handles
+        :param methods: A dictionary containing the function handles, grouped by function type
+        :return: A dictionary of task objects, which were converted from the given handles
+        """
         task_objects = {
             "datasets": [],
             "algorithms": [],

@@ -7,7 +7,6 @@ import numpy as np
 from cpdbench.control.TestrunController import TestrunController
 from cpdbench.control.ValidationRunController import ValidationRunController
 from cpdbench.utils import BenchConfig, Logger
-from cpdbench_frontend.StreamlitFrontendRenderer import StreamlitFrontendRenderer
 
 
 class TestrunType(Enum):
@@ -28,10 +27,14 @@ class ExtendedEncoder(json.JSONEncoder):
 
 
 class TestbenchController:
-    """Main controller for starting different types of test runs"""
+    """Main controller for starting different types of test runs.
+    This is the basic class which is executed after initialization of the framework.
+    This controller then calls an ExecutionController implementation, which contains
+    the actual logic of a run.
+    """
 
     def execute_testrun(self, runtype: TestrunType, datasets: list, algorithms: list, metrics: list) -> None:
-        """Prepares and runs the needed testrun
+        """Prepares and runs the required testrun
         :param runtype: Type of testrun to run
         :param datasets: list of dataset functions
         :param algorithms: list of algorithm functions
@@ -52,7 +55,6 @@ class TestbenchController:
         Logger.get_application_logger().info("CDPBench has finished. The following config has been used:")
         Logger.get_application_logger().info(BenchConfig.get_complete_config())
         logging.shutdown()
-        # StreamlitFrontendRenderer().show_results(result)
 
     def _output_result(self, result_dict: dict) -> None:
         """Outputs a result dict correctly on console and in a file

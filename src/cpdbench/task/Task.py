@@ -12,11 +12,16 @@ class TaskType(Enum):
 
 
 class Task(ABC):
-    """Abstract class for a Task object which defines a list of operations.
-    This task has a name, can be validated, and executed.
+    """Abstract class for a Task object which is a work package to be executed by the framework.
+    A task has a name, can be validated, and executed, and can have some parameters.
     """
 
     def __init__(self, function, counter=0, param_dict=None):
+        """General constructor for all task objects.
+        :param function: The function handle to be executed as task content
+        :param counter: A number which is appended to the task name. Useful if multiple tasks with the same name exist.
+        :param param_dict: An optional parameter dictionary for the task
+        """
         self._function = function
         if isinstance(function, functools.partial):
             self._function_name = function.func.__name__
@@ -35,9 +40,6 @@ class Task(ABC):
         """Validates the task statically by checking task details before running it.
         Throws an exception if the validation fails.
         """
-        # Validiert wird:
-        # - Anzahl Params
-        # (optional wenn Typing): Typen, Rückgabetyp //TODO
         pass
 
     @abstractmethod
@@ -45,9 +47,6 @@ class Task(ABC):
         """Validates the task in combination with some input arguments.
         Throws an exception if the validation fails.
         """
-        # Validiert wird:
-        # - Fehler, wenn Algorithmus aufgerufen wird?
-        # - Fehler, wenn Metrik aufgerufen wird?
         pass
 
     @abstractmethod

@@ -1,50 +1,8 @@
- #Structure:
-# {
-#   "datasets": [],
-#   "algorithms": [],
-#   "metrics": [],
-#   "created": 242,
-#   "last_updated": 252,
-#   "runtime":
-#     "total":
-#     "ds1":
-#       "runtime": 34534
-#       "alg1": ...
-#   "results": {
-#     "ds1": {
-#       "amount_features" : 2,
-#       "indexes": {
-#         "f1": {
-#           "alg1": []
-#         }
-#       },
-#       "scores": {},
-#       "metric_scores": {
-#         "f1": {
-#           "alg1": {
-#             "metr1": []
-#           }
-#         }
-#       }
-#     }
-#   }
-#   "errors": [
-#       {
-#           "dataset": "ds1",
-#           "error_type": "DATASET",
-#           "algorithm": None,
-#           "metric": None,
-#           "exception_type": "dsff",
-#           "stack_trace": "dsfjkldsfjlksdjf"
-#       }
-#   ]
-#
-# }
 from cpdbench.control.CPDDatasetResult import CPDDatasetResult
 import datetime
 
 
-class CPDFullResult:
+class CPDFullResult: #TODO Oberklasse für Results
     """Container for a complete run result with all datasets"""
 
     def __init__(self, datasets: list[str], algorithms: list[str], metrics: list[str]):
@@ -64,7 +22,7 @@ class CPDFullResult:
         self._runtimes = {}
 
     def add_dataset_result(self, dataset_result: CPDDatasetResult) -> None:
-        """Add a calculated dataset result to the FullResult
+        """Adds a calculated dataset result to the FullResult
         :param dataset_result: the dataset result to add
         """
         self._result = self._result | dataset_result.get_result_as_dict()
@@ -74,7 +32,7 @@ class CPDFullResult:
         self._runtimes = self._runtimes | dataset_result.get_runtimes()
 
     def get_result_as_dict(self) -> dict:
-        """Return the complete result with all dataset results and metadata as python dict
+        """Returns the complete result with all dataset results and metadata as python dict
         :return: the result as python dict
         """
         return {
