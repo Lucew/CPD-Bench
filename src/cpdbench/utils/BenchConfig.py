@@ -10,6 +10,8 @@ After this the other functions can be used.
 import yaml
 import logging
 
+from cpdbench.exception.ConfigurationException import ConfigurationFileNotFoundException, ConfigurationException
+from cpdbench.utils import Logger
 from cpdbench.utils.UserConfig import UserConfig
 
 _complete_config = None
@@ -27,6 +29,8 @@ result_file_name: str = 'cpdbench-result.json'
 
 # USER PARAMETERS
 _user_config = None
+
+_config_error_list = []
 
 
 def get_user_config() -> UserConfig:
@@ -65,9 +69,14 @@ def load_config(config_file='config.yml') -> bool:
     """
     global _complete_config
     global _user_config
+    if config_file is None:
+        _user_config = UserConfig()
+        _throw_config_errors()
+        return False
     _complete_config = _load_config_from_file(config_file)
     if _complete_config is None:
         _user_config = UserConfig()
+        _throw_config_errors()
         return False
 
     # logging
@@ -88,7 +97,8 @@ def load_config(config_file='config.yml') -> bool:
     # user variables
     _user_config = UserConfig(_complete_config.get('user'))
     _user_config.validate_user_config()
-    # TODO: proper Exception Handling here
+
+    _throw_config_errors()
 
     return True
 
@@ -125,6 +135,7 @@ def _get_log_level(config, param_name):
     elif config[param_name].upper() == 'CRITICAL':
         return logging.CRITICAL
     else:
+        _add_config_error(ConfigurationException(param_name))
         return logging.INFO
 
 
@@ -133,11 +144,17 @@ def _load_config_from_file(config_file: str):
         with open(config_file, 'r') as config_file_stream:
             yaml_config = yaml.safe_load(config_file_stream)
     except OSError:
-        print("WARNING: config file not found!")
+        _add_config_error(ConfigurationFileNotFoundException(config_file))
         return None
     else:
         return yaml_config
 
-# TODO: Teste:
-# - keine Config-Datei
-# - einzelne Werte fehlen
+
+def _add_config_error(exc: Exception) -> None:
+    _config_error_list.append(exc)
+
+
+def _throw_config_errors() -> None:
+    logger = Logger.get_application_logger()
+    for exc in _config_error_list:
+        logger.warning(exc)

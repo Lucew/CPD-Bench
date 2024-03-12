@@ -50,11 +50,17 @@ class TestbenchController:
             "algorithms": algorithms,
             "metrics": metrics
         }
-        result = controller.execute_run(function_map)
-        self._output_result(result.get_result_as_dict())
-        Logger.get_application_logger().info("CDPBench has finished. The following config has been used:")
-        Logger.get_application_logger().info(BenchConfig.get_complete_config())
-        logging.shutdown()
+        try:
+            result = controller.execute_run(function_map)
+        except Exception as e:
+            Logger.get_application_logger().critical("Unexpected error occurred during bench run. CPDBench was aborted.")
+            Logger.get_application_logger().critical(e)
+            logging.shutdown()
+        else:
+            self._output_result(result.get_result_as_dict())
+            Logger.get_application_logger().info("CDPBench has finished. The following config has been used:")
+            Logger.get_application_logger().info(BenchConfig.get_complete_config())
+            logging.shutdown()
 
     def _output_result(self, result_dict: dict) -> None:
         """Outputs a result dict correctly on console and in a file

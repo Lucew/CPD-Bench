@@ -47,8 +47,6 @@ class TestrunController(ExecutionController):
         self._logger.info('Creating tasks...')
         tasks = self._create_tasks(methods)
         self._logger.info(f"{len(tasks['datasets']) + len(tasks['algorithms']) + len(tasks['metrics'])} tasks created")
-        # TODO: Prüfen, ob es noch genug Tasks gibt (evtl. gar nicht nötig)
-        # print(multiprocessing.cpu_count())
 
         dataset_results = []
         run_result = CPDFullResult(list(map(lambda x: x.get_task_name(), tasks['datasets'])),

@@ -11,7 +11,7 @@ class CPDBench:
         self._metrics = []
         self._logger = None
 
-    def start(self, config_file: str = 'config.yml') -> None:
+    def start(self, config_file: str = None) -> None:
         """Start the execution of the CDPBench environment
         :param config_file: Path to the CDPBench configuration file; defaults to 'config.yml'
         """

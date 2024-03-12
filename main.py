@@ -30,4 +30,4 @@ def calc_accuracy(indexes, scores, ground_truth, *, window_size):
 
 
 if __name__ == '__main__':
-    cpdb.start()
+    cpdb.start("config.yml")

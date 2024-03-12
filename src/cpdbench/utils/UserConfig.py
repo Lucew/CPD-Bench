@@ -93,7 +93,7 @@ class UserConfig:
                 else:
                     return False
         if is_global_param is None:
-            raise Exception("Parameter not found")
+            raise Exception("Parameter not found: " + param_name)
         else:
             return is_global_param
 

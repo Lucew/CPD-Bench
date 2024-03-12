@@ -38,4 +38,4 @@ class AlgorithmExecutionTask(Task):
         return alg_res_index, alg_res_scores
 
     def get_task_name(self) -> str:
-        return "algorithm:" + self._task_name #TODO: fstring, String Concatenation vermeiden
+        return f"algorithm: {self._task_name}"

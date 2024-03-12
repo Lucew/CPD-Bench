@@ -38,7 +38,11 @@ class TaskFactory:
         """
         all_params = [param.name for param in inspect.signature(function).parameters.values() if param.kind ==
                       param.KEYWORD_ONLY]
-        global_params = [param for param in all_params if self._user_config.check_if_global_param(param)]
+        try:
+            global_params = [param for param in all_params if self._user_config.check_if_global_param(param)]
+        except Exception as e:
+            if "Parameter not found" in str(e):
+                raise UserParameterDoesNotExistException(str(e).split()[-1], get_name_of_function(function))
 
         if all_params is None or len(all_params) == 0:
             # Easy case: no parameter
