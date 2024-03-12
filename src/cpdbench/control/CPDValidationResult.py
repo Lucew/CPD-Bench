@@ -1,8 +1,10 @@
 import datetime
 import traceback
 
+from cpdbench.control.CPDResult import CPDResult
 
-class CPDValidationResult:
+
+class CPDValidationResult(CPDResult):
     """Container for a validation run result."""
 
     def __init__(self, errors: list, datasets: list[str], algorithms: list[str], metrics: list[str]):

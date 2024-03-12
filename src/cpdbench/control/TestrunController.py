@@ -5,6 +5,7 @@ import threading
 from concurrent.futures import ProcessPoolExecutor
 
 from cpdbench.control.CPDFullResult import CPDFullResult
+from cpdbench.control.CPDResult import CPDResult
 from cpdbench.control.DatasetExecutor import DatasetExecutor
 from cpdbench.control.ExecutionController import ExecutionController
 from cpdbench.utils import Logger, BenchConfig
@@ -43,7 +44,7 @@ class TestrunController(ExecutionController):
         self._logger = Logger.get_application_logger()
         super().__init__(self._logger)
 
-    def execute_run(self, methods: dict) -> any:
+    def execute_run(self, methods: dict) -> CPDResult:
         self._logger.info('Creating tasks...')
         tasks = self._create_tasks(methods)
         self._logger.info(f"{len(tasks['datasets']) + len(tasks['algorithms']) + len(tasks['metrics'])} tasks created")

@@ -1,8 +1,10 @@
 from cpdbench.control.CPDDatasetResult import CPDDatasetResult
 import datetime
 
+from cpdbench.control.CPDResult import CPDResult
 
-class CPDFullResult: #TODO Oberklasse für Results
+
+class CPDFullResult(CPDResult):
     """Container for a complete run result with all datasets"""
 
     def __init__(self, datasets: list[str], algorithms: list[str], metrics: list[str]):

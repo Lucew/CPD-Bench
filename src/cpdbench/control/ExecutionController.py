@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from cpdbench.control.CPDResult import CPDResult
 from cpdbench.exception.UserParameterDoesNotExistException import UserParameterDoesNotExistException
 from cpdbench.exception.ValidationException import ValidationException
 from cpdbench.task.Task import TaskType
@@ -16,7 +17,7 @@ class ExecutionController(ABC):
         self._logger = logger
 
     @abstractmethod
-    def execute_run(self, methods: dict) -> any:
+    def execute_run(self, methods: dict) -> CPDResult:
         """Executes the run implemented by this class.
         :param methods: dictionary with all given input functions, grouped by function type.
         :return: A result object which can be handed to the user

@@ -1,3 +1,4 @@
+from cpdbench.control.CPDResult import CPDResult
 from cpdbench.control.CPDValidationResult import CPDValidationResult
 from cpdbench.control.ExecutionController import ExecutionController
 from cpdbench.exception.ValidationException import DatasetValidationException, AlgorithmValidationException, \
@@ -15,7 +16,7 @@ class ValidationRunController(ExecutionController):
         self._logger = Logger.get_application_logger()
         super().__init__(self._logger)
 
-    def execute_run(self, methods: dict) -> any:
+    def execute_run(self, methods: dict) -> CPDResult:
         self._logger.info('Creating tasks...')
         tasks = self._create_tasks(methods)
         self._logger.info(f"{len(tasks['datasets']) + len(tasks['algorithms']) + len(tasks['metrics'])} tasks created")
