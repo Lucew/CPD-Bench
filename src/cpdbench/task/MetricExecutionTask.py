@@ -33,4 +33,4 @@ class MetricExecutionTask(Task):
             return res
 
     def get_task_name(self) -> str:
-        return f"metric: {self._task_name}"
+        return f"metric:{self._task_name}"

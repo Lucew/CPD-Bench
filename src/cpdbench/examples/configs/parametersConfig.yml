@@ -1,0 +1,19 @@
+logging:
+  filename: cpdbench-log-parameters.txt
+  log-level: DEBUG
+  log-level-console: WARNING
+multiprocessing: True
+
+result:
+  filename: cpdbench-result-parameters.json
+
+
+user:
+  algorithm-executions:
+    - window_length: 90
+    - window_length: 45
+    - window_length: 70
+
+  metric-executions:
+    - window_size: 50
+    - window_size: 20

@@ -36,4 +36,4 @@ class DatasetFetchTask(Task):
         return dataset
 
     def get_task_name(self) -> str:
-        return f"dataset: {self._task_name}"
+        return f"dataset:{self._task_name}"
