@@ -9,3 +9,6 @@ src/cpdbench-result.json
 
 venv
 venv-new
+
+dachboden.py
+config.yml
