@@ -7,7 +7,6 @@ multiprocessing: True
 result:
   filename: cpdbench-result-parameters.json
 
-
 user:
   algorithm-executions:
     - window_length: 90

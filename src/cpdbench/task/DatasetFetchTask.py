@@ -26,7 +26,7 @@ class DatasetFetchTask(Task):
             dataset.init()
         except Exception as e:
             raise DatasetValidationException(f"The validation of {get_name_of_function(self._function)} failed.") \
-                from e # TODO: Funktioniert das noch?
+                from e
         else:
             return dataset
 

@@ -60,5 +60,5 @@ class ValidationRunController(ExecutionController):
                                                 list(map(lambda x: x.get_task_name(), tasks['metrics'])))
         for i in range(0, len(exception_list)):
             self._logger.info(f"Error {i}")
-            self._logger.exception(exception_list[i])
+            self._logger.exception(exception_list[i], exc_info=exception_list[i])
         return validation_result

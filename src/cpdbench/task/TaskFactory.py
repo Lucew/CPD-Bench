@@ -71,7 +71,7 @@ class TaskFactory:
             else:
                 for i in range(len(param_values)):
                     if param in global_params:
-                        param_values[i].update({param: vals[0]})  # global param # TODO: was wenn param wo fehlt?
+                        param_values[i].update({param: vals[0]})  # global param
                     else:
                         param_values[i].update({param: vals[i]})  # execution param
 
