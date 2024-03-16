@@ -82,7 +82,6 @@ exclude_lines = [
 exclude = [
   "dachboden.py",
   ".gitignore",
-  "data/",
   "main.py",
   "config.yml"
 ]
