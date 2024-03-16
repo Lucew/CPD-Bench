@@ -1,7 +1,7 @@
 import unittest
 
 from cpdbench.control.CPDDatasetResult import CPDDatasetResult, ErrorType
-from cpdbench.dataset.CPD2DNdarrayDataset import CPD2DNdarrayDataset
+from cpdbench.dataset.CPDNdarrayDataset import CPDNdarrayDataset
 from cpdbench.exception.ResultSetInconsistentException import ResultSetInconsistentException
 from cpdbench.task.Task import TaskType
 from cpdbench.task.TaskFactory import TaskFactory
@@ -9,7 +9,7 @@ import numpy as np
 
 
 def _generate_dummy_dataset():
-    return CPD2DNdarrayDataset(np.zeros(3), [1])
+    return CPDNdarrayDataset(np.zeros(3), [1])
 
 
 def _dummy_algorithm_task(dataset):
@@ -21,8 +21,6 @@ def _dummy_metric_task(indexes, confidences, gts):
 
 
 class TestResultObjects(unittest.TestCase):
-    # TODO: Teste
-    # - full_result: add_dataset_result
 
     def setUp(self):
         self._task_factory = TaskFactory()

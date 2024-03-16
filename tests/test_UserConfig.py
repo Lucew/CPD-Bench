@@ -154,7 +154,7 @@ class TestUserConfig(unittest.TestCase):
         with self.assertRaises(Exception) as cm:
             config.check_if_global_param("y")
         exc = cm.exception
-        self.assertEqual(str(exc), "Parameter not found")
+        self.assertEqual(str(exc), "Parameter not found: y")
 
     def test_check_if_global_param_both_global_and_execution(self):
         # arrange

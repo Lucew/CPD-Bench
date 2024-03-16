@@ -12,6 +12,7 @@ def get_extreme_large_dataset_from_file(validation_amount=-1):
     dataset = CPD2DFromFileDataset(str(path), "float32", [5, 245, 255, 256, 25], validation_amount)
     return dataset
 
+
 def dataset_get_apple_dataset():
     raw_data = np.load("../../../data/apple.npy")
     timeseries = raw_data[:, 0]

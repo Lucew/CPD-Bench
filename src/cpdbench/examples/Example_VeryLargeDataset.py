@@ -22,6 +22,10 @@ def compute_metric(indexes, confidences, ground_truths):
     return metric_accuracy_in_allowed_windows(indexes, confidences, ground_truths, window_size=20)
 
 
+# IMPORTANT!
+# To run this example, the file "data/very_big_numpy_file" has to be generated first.
+# To do this first run the script "data/generate_very_big_numpy_file.dat.py"
+
 if __name__ == '__main__':
     path = pathlib.Path(__file__).parent.resolve()
     path = path.joinpath("configs", "VeryLargeDatasetConfig.yml")
