@@ -4,11 +4,18 @@ from cpdbench.dataset.CPDDataset import CPDDataset
 
 
 class CPDNdarrayDataset(CPDDataset):
+    """Implementation of CPDDataset where the data source is a standard 2D numpy array
+    """
 
     def get_validation_preview(self) -> tuple[ndarray, list[int]]:
         return self._validation_array, self._validation_ground_truths
 
-    def __init__(self, numpy_array, ground_truths, validation_amount=-1):
+    def __init__(self, numpy_array: ndarray, ground_truths: list[int], validation_amount: int = -1):
+        """Constructor
+        :param numpy_array: the main dataset as 2D numpy array
+        :param ground_truths: the ground truth changepoints of the dataset as int list
+        :param validation_amount: the number of datapoints (in the 2nd dimension) to use for validation purposes.
+        """
         self._ndarray = numpy_array
         self._ground_truths = ground_truths
         if validation_amount == -1:

@@ -11,6 +11,7 @@ import yaml
 import logging
 
 from cpdbench.exception.ConfigurationException import ConfigurationFileNotFoundException, ConfigurationException
+from cpdbench.exception.ValidationException import UserConfigValidationException
 from cpdbench.utils import Logger
 from cpdbench.utils.UserConfig import UserConfig
 
@@ -96,7 +97,10 @@ def load_config(config_file='config.yml') -> bool:
 
     # user variables
     _user_config = UserConfig(_complete_config.get('user'))
-    _user_config.validate_user_config()
+    try:
+        _user_config.validate_user_config()
+    except Exception as e:
+        raise UserConfigValidationException(str(e))
 
     _throw_config_errors()
 

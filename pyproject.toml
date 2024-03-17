@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cpdbench"
-version = "0.0.2"
+version = "0.0.4"
 description = 'A benchmarking framework to run and evaluate changepoint detection algorithms.'
 readme = "README.md"
 requires-python = ">=3.9"

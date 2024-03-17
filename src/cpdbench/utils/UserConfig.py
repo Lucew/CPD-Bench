@@ -128,7 +128,7 @@ class UserConfig:
             for j in range(1, len(part_dict)):
                 for par in exec_params:
                     if part_dict[j].get(par) is None:
-                        raise Exception("Parameter not found in all configurations")
+                        raise Exception("Parameter not found in all configurations: " + par)
 
         params = self._get_all_params()
         for param in params:
@@ -144,7 +144,7 @@ class UserConfig:
                 user_param = part_dict[0].get(param)
                 if user_param is not None:
                     if is_global_param is True:
-                        raise Exception("Parameter both global and execution")
+                        raise Exception(f"Parameter {param} both global and execution")
 
     def _get_all_params(self) -> set:
         params = [param for param in self._user_param_dict

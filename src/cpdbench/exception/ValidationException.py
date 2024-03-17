@@ -21,3 +21,10 @@ class MetricValidationException(ValidationException):
 class DatasetValidationException(ValidationException):
     """Validation exception when runtime validation of a dataset fails."""
     pass
+
+
+class UserConfigValidationException(ValidationException):
+    """Validation exception when user config part is inconsistent"""
+
+    def __init__(self, problem):
+        super().__init__(f"User config is invalid: {problem}")

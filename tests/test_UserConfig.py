@@ -255,7 +255,7 @@ class TestUserConfig(unittest.TestCase):
         with self.assertRaises(Exception) as cm:
             config.validate_user_config()
         exc = cm.exception
-        self.assertEqual(str(exc), "Parameter not found in all configurations")
+        self.assertEqual(str(exc), "Parameter not found in all configurations: x")
 
     def test_validate_user_config_params_defined_as_both_global_and_execution(self):
         # arrange
@@ -272,5 +272,5 @@ class TestUserConfig(unittest.TestCase):
         with self.assertRaises(Exception) as cm:
             config.validate_user_config()
         exc = cm.exception
-        self.assertEqual(str(exc), "Parameter both global and execution")
+        self.assertEqual(str(exc), "Parameter x both global and execution")
 

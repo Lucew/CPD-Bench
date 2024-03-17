@@ -2,18 +2,18 @@ import time
 import numpy as np
 from changepoynt.algorithms.sst import SST
 
-from cpdbench.dataset.CPD2DNdarrayDataset import CPD2DNdarrayDataset
+from cpdbench.dataset.CPDNdarrayDataset import CPDNdarrayDataset
 from cpdbench.examples import ExampleMetrics
 from cpdbench.CPDBench import CPDBench
 
 # Instructions for performance test:
 # 1. Choose raw_data depending on the wished performance test configuration
 
-raw_data = np.load("../../../../data/apple.npy")
-# raw_data = np.load("../../../../data/apple_small.npy")
-# raw_data = np.load("../../../../data/apple_medium.npy")
-# raw_data = np.load("../../../../data/apple_big.npy")
-# raw_data = np.load("../../../../data/apple_very_big.npy")
+raw_data = np.load("../data/apple.npy")
+# raw_data = np.load("../data/apple_small.npy")
+# raw_data = np.load("../data/apple_medium.npy")
+# raw_data = np.load("../data/apple_big.npy")
+# raw_data = np.load("../data/apple_very_big.npy")
 
 # 2. Run test script: python3 overhead_performance_test.py
 
@@ -25,7 +25,7 @@ cpdb = CPDBench()
 
 @cpdb.dataset
 def get_apple():
-    return CPD2DNdarrayDataset(reshaped_ts, [200])
+    return CPDNdarrayDataset(reshaped_ts, [200])
 
 
 @cpdb.algorithm

@@ -14,14 +14,18 @@ def get_extreme_large_dataset_from_file(validation_amount=-1):
 
 
 def dataset_get_apple_dataset():
-    raw_data = np.load("data/apple.npy")
+    path = pathlib.Path(__file__).parent.resolve()
+    path = path.joinpath("data", "apple.npy")
+    raw_data = np.load(str(path))
     timeseries = raw_data[:, 0]
     reshaped_ts = np.reshape(timeseries, [1, timeseries.size])
     return CPDNdarrayDataset(reshaped_ts, [337])
 
 
 def dataset_get_bitcoin_dataset():
-    raw_data = np.load("data/bitcoin.npy")
+    path = pathlib.Path(__file__).parent.resolve()
+    path = path.joinpath("data", "bitcoin.npy")
+    raw_data = np.load(str(path))
     timeseries = raw_data[:, 0]
     reshaped_ts = np.reshape(timeseries, [1, timeseries.size])
     return CPDNdarrayDataset(reshaped_ts, [569])

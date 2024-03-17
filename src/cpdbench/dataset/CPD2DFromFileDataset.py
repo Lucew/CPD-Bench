@@ -6,7 +6,7 @@ from cpdbench.dataset.CPDDataset import CPDDataset
 class CPD2DFromFileDataset(CPDDataset):
     """Implementation of CPDDataset where the data source is large numpy array saved as file via memmap.
     With this implementation the framework can use very large datasets which are not completely loaded
-    into the main memory. Instead numpy will lazy load all needed data points.
+    into the main memory. Instead, numpy will lazy load all needed data points.
     """
 
     def __init__(self, file_path: str, dtype: str, ground_truths: list[int], validation_amount=-1):
@@ -20,7 +20,6 @@ class CPD2DFromFileDataset(CPDDataset):
         self._array = None
         self._ground_truths = ground_truths
         self._validation_amount = validation_amount
-
 
     def init(self) -> None:
         self._array = memmap(self.file_path, self.dtype, mode='r')
